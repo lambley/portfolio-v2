@@ -21,15 +21,17 @@ const blogPosts = [
   { title: "Post 1", href: "/blog/post-1" },
   { title: "Post 2", href: "/blog/post-2" },
   { title: "Post 3", href: "/blog/post-3" },
+  { title: "All posts", href: "/blog" },
 ];
 
 const portfolioItems = [
   { title: "Project 1", href: "/portfolio/project-1" },
   { title: "Project 2", href: "/portfolio/project-2" },
   { title: "Project 3", href: "/portfolio/project-3" },
+  { title: "All projects", href: "/portfolio" },
 ];
 
-export default function NavigationMenuDemo() {
+export default function Navigation() {
   return (
     <div className="w-fit flex justify-center mx-auto lg:mt-4 lg:mb-0 lg:sticky lg:top-4 mb-4 bottom-0 absolute left-0 right-0">
       <NavigationMenu className="z-[5] max-w-[1200px] w-full px-4">
