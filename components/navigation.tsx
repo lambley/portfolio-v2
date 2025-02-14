@@ -27,7 +27,7 @@ const blogItems: Blog[] = [
   {
     id: 0,
     title: "All Blog Posts",
-    slug: "blog",
+    slug: "",
     image: "",
     description: "View all blog posts",
     status: "published",
@@ -38,7 +38,7 @@ const blogItems: Blog[] = [
 
 export default function Navigation() {
   return (
-    <div className="w-fit h-16 flex justify-center mx-auto lg:mt-4 lg:mb-0 lg:sticky lg:top-4 mb-4 bottom-0 absolute left-0 right-0">
+    <div className="w-fit h-16 flex justify-center mx-auto mt-4 sticky top-4 left-0 right-0">
       <NavigationMenu className="z-[5] max-w-[1200px] w-full px-4">
         <NavigationMenuList className="flex justify-between w-full">
           <NavigationMenuItem>
@@ -58,7 +58,7 @@ export default function Navigation() {
                   <ListItem
                     key={post.title}
                     title={post.title}
-                    href={`/blog/${post.slug}`}
+                    href={`/blog/${post.slug}` || "/blog"}
                   >
                     {post.description}
                   </ListItem>
