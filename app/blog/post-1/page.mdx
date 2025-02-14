@@ -73,7 +73,7 @@ As such, you need to update the CORS policy in the RoR app to allow requests fro
 - Run `bundle install`
 - Find this file `config/initializers/cors.rb` and update the `origins` line to `origins '*'` - this will accept requests from any origin. The file should look like this:
 
-```
+```ruby
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins '*'
