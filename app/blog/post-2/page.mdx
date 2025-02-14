@@ -1,0 +1,458 @@
+# How to create a small microservice app with Ruby on Rails (RoR) and TypeScript React (ReactTS) (Part 2)
+
+How to use this Tutorial:
+
+- Read it! There's a lot in here to help with learning and understanding basic microservice architecture e.g. CORS policies
+- Bullet pointed sections are Actions - these are what you need to do
+- Give me any feedback if there are any mistakes in the tutorial
+
+Advanced Tutorial that requires some basic knowledge in:
+
+- Ruby on Rails setup (follow the basic tutorial)
+- RESTful APIs and [HTTP Request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
+- PostgreSQL
+- JavaScript
+
+Technical and installation requirements:
+
+- Ruby (and rbenv), v3.1.2
+- Ruby on Rails, v>7.0.6
+- NodeJS, v>16.13.1
+
+## Creating the ReactTS app
+
+React is a JavaScript library for building user interfaces. It is a popular choice for Frontend frameworks.
+
+TypeScript is a superset of JavaScript that adds static typing to the language. It is a popular choice for Frontend frameworks.
+
+We will write the ReactTS app in TypeScript, as it is a more robust language than JavaScript.
+
+There's a lot to learn about React and TypeScript, so I won't go into detail here. You can read more about [React](https://reactjs.org/docs/getting-started.html) and [TypeScript](https://www.typescriptlang.org/docs/handbook/intro.html) in the official docs.
+
+### 1. Create the ReactTS app
+
+We will use the `create-react-app` generator to create the ReactTS app.
+
+- Run `npx create-react-app [REACT_APP_NAME] --template typescript`
+  - This will create a ReactTS app with TypeScript
+- Run `npm install` to install the dependencies
+- Create a `.env` file in the root directory
+  - This will be used to store environment variables
+- Add `REACT_APP_API_URL=http://localhost:3000/api/v1` to the `.env` file
+  - This will be used to store the API URL
+- Add `PORT=3001`
+  - This will be used to store the port number for the ReactTS app
+- Add `.env` to the `.gitignore` file
+  - This will prevent the `.env` file from being pushed to GitHub
+- Run `npm start` to start the ReactTS app
+  - You should see the ReactTS app running on `localhost:3001`
+
+### 2. Setup the ReactTS app
+
+We will use:
+
+- [Bootstrap](https://getbootstrap.com/) for styling
+- [Axios](https://axios-http.com/) for HTTP requests.
+- [react-router-dom](https://reactrouter.com/web/guides/quick-start) for routing
+
+We're using TypeScript, so we will also need to install the types files for Bootstrap and Axios.
+
+- Run `npm install react-bootstrap@next`
+- And install types file `npm install @types/react-bootstrap@next`
+  - This will install the latest version of React Bootstrap
+- Run `npm install axios`
+- And install types file `npm install @types/axios`
+  - This will install Axios
+- Run `npm install react-router-dom`
+- And install types file `npm install @types/react-router-dom`
+  - This will install React Router DOM
+
+These are the core dependencies we will use for the ReactTS app.
+
+### 3. Create the ReactTS app folder structure and basic routing
+
+We will use have this folder structure:
+
+```
+grad_project
+├── api # <-- Rails API app
+├── client # <-- ReactTS app
+│   ├── public
+│   │   ├── index.html
+│   │   └── ...
+│   ├── src
+│   │   ├── components
+│   │   │   ├── [COMPONENT_NAME]
+│   │   │   ├── ...
+│   │   ├── pages
+│   │   │   ├── [PAGE_NAME]
+│   │   │   ├── ...
+│   │   ├── Types
+│   │   │   ├── [TS types files]
+│   │   ├── App.css
+│   │   ├── App.test.tsx
+│   │   ├── App.tsx # <-- routes
+│   │   ├── index.css
+│   │   ├── index.tsx # <-- entry point
+│   │   ├── react-app-env.d.ts
+│   │   ├── reportWebVitals.ts
+│   │   └── setupTests.ts
+│   ├── .env
+│   ├── .gitignore
+│   ├── package.json
+│   ├── README.md
+│   └── tsconfig.json
+```
+
+The way that `create-react-app` works is that it will create a `public` and `src` folder for you, with some boilerplate files.
+
+`index.tsx` is normally the entry point of the app (i.e. the first file that is run and the element with `id=root` where the app renders). `App.tsx` is also automatically generated and is the main component that is rendered in `index.tsx`.
+
+We will create a `components` and `pages` folder in the `src` folder, as well as some other files.
+
+- Create a `components` folder in the `src` folder
+- Create a `pages` folder in the `src` folder
+- (OPTIONAL) Create a `__mocks__` folder in the `src` folder
+  - This is where we will store mock data for testing
+- (OPTIONAL) Create a `__tests__` folder in the `components` folder and `pages` folder
+  - This is where we will store tests for the components and pages
+
+For the routing, we will use React Router DOM.
+
+- In the `App.tsx` file, add:
+
+```
+import { Routes } from 'react-router-dom';
+import { HomePage } from './pages/HomePage';
+[...other imports like Navbar custom component]
+
+export const App = () => {
+  return (
+    <>
+      <NavbarComponent />
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+      </Routes>
+    </>
+  );
+};
+```
+
+- In the `pages` folder, create a `HomePage` file
+- In the `HomePage` file, add:
+
+```
+import React from 'react';
+
+export const HomePage = () => {
+  return (
+    <div>
+      <h1>Home Page</h1>
+    </div>
+  );
+};
+```
+
+When you run the app, you should see the Home Page.
+
+You may want to reorganise the folder structure later on, e.g. move stylesheets to a `styles` folder, but for now we will keep it simple. If you do move the stylesheets, for example, you will need to update the `import` statements in the components and pages.
+
+### 3a. Setup Jest (OPTIONAL)
+
+We will use Jest ([official docs](https://jestjs.io/)) for testing.
+
+- Run `npm install jest`
+- And install types file `npm install @types/jest`
+  - This will install Jest
+- Create a `jest.config.js` file in the root directory
+  - This is where we will configure Jest
+  - An example config file is:
+
+```
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: [
+    '@testing-library/jest-dom/extend-expect'
+  ],
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
+  },
+};
+```
+
+- Add `jest.config.js` to the `.gitignore` file
+  - This will prevent the `jest.config.js` file from being pushed to GitHub
+- Add `'test': 'jest --watchAll --verbose'` to the `scripts` block in the `package.json` file
+
+### 4. Create the ReactTS app components
+
+We will create the following components:
+
+- `Navbar`
+- `PostList`
+- `PostItem`
+- `PostForm`
+
+#### 4a. Create the `Navbar` component
+
+- In the `components` folder, create a `Navbar.tsx` file
+- In the `Navbar.tsx` file, add:
+
+```
+import React from 'react';
+import { Navbar, Container, Nav } from 'react-bootstrap';
+
+export const NavbarComponent = () => {
+  return (
+    <Navbar bg='dark' variant='dark'>
+      <Container>
+        <Navbar.Brand href='/'>Grad Project</Navbar.Brand>
+        <Nav className='me-auto'>
+          <Nav.Link href='/'>Home</Nav.Link>
+        </Nav>
+      </Container>
+    </Navbar>
+  );
+};
+```
+
+- In the `App.tsx` file, add:
+
+```
+import { NavbarComponent } from './components/Navbar';
+
+// update the the App component with the NavbarComponent
+export const App = () => {
+  return (
+    <>
+      <NavbarComponent />
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+      </Routes>
+    </>
+  );
+};
+```
+
+When you run the app, you should see the Navbar on the Home page.
+
+#### 4b. Create the `PostList` component
+
+- In the `components` folder, create a `PostList.tsx` file
+- In the `PostList.tsx` file, add:
+
+```
+import React, { useState } from 'react';
+
+export const PostList = () => {
+  const [posts, setPosts] = useState([]);
+
+  const getPosts = () => {
+    try {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/posts`);
+    setPosts(res.data);
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+  return (
+    <div>
+      <h1>Post List</h1>
+      <p># of posts: {posts.length}</p>
+    </div>
+  );
+}
+```
+
+We will add the PostItem component later.
+
+There's a lot to learn about state and hooks in React, so I won't go into detail here. You can read more about [useState](https://reactjs.org/docs/hooks-state.html) and [useEffect](https://reactjs.org/docs/hooks-effect.html) in the official docs.
+
+You may want to consider using useEfffect to fetch the data from the API based on certain criteria (e.g. page load, when some other state has been updated), but for now we will just use the `getPosts` function.
+
+#### 4c. Create the `PostItem` component
+
+In order to display the Post data, we will create a `PostItem` component that will be iteratively rendered in the `PostList` component.
+
+- In the `components` folder, create a `PostItem.tsx` file
+- In the `PostItem.tsx` file, add:
+
+```
+import React, { useState } from 'react';
+
+export const PostItem = ({ post }) => {
+
+
+  return (
+    <div>
+      <h3>{post.title}</h3>
+      <p>{post.content}</p>
+    </div>
+  );
+}
+```
+
+- In the `PostList.tsx` file, add:
+
+```
+import { PostItem } from './PostItem';
+
+export const PostList = () => {
+  // rest stays the same
+
+  // update the return statement to iteratively render the PostItem component
+  return (
+    <div>
+      <h1>Post List</h1>
+      <p># of posts: {posts.length}</p>
+      {posts.map((post) => (
+        <PostItem post={post} />
+      ))}
+    </div>
+  );
+}
+```
+
+We're not making the most of TypeScript here, as we're not using any types for the props. We will add this now.
+
+- In the `Types` folder, create a `PostTypes.ts` file
+- In the `PostTypes.ts` file, add:
+
+```
+export interface Post {
+  id: number;
+  title: string;
+  content: string;
+}
+```
+
+You will need to update this interface if you add more fields to the Post model.
+
+- In the `PostItem.tsx` file, add:
+
+```
+import { Post } from '../Types/PostTypes';
+
+// add the type to the props
+export const PostItem = ({ post }: { post: Post }) => {
+  // rest stays the same
+}
+```
+
+TypeScript will now throw an error if you try to pass in a prop that is not of type `Post`.
+
+#### 4d. Create the `PostForm` component
+
+We will create a `PostForm` component that will be used to create and update posts.
+
+- In the `components` folder, create a `PostForm.tsx` file
+- In the `PostForm.tsx` file, add:
+
+```
+import React, { useState } from 'react';
+
+export const PostForm = () => {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const post = {
+      title: title,
+      content: content,
+    };
+    console.log(post);
+  };
+
+  return (
+    <div>
+      <h1>Create Post</h1>
+      <form onSubmit={handleSubmit}>
+        <div className='mb-3'>
+          <label htmlFor='title' className='form-label'>
+            Title
+          </label>
+          <input
+            type='text'
+            className='form-control'
+            id='title'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className='mb-3'>
+          <label htmlFor='content' className='form-label'>
+            Content
+          </label>
+          <textarea
+            className='form-control'
+            id='content'
+            rows={3}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          ></textarea>
+        </div>
+        <button type='submit' className='btn btn-primary'>
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+};
+```
+
+Consider using react-hook-forms to handle form validation and submission. Find out more info here: https://react-hook-form.com/
+
+You can opt to add a button to the `PostList` component to open the `PostForm` component in a modal, or you can create a separate `PostCreate` component that will render the `PostForm` component.
+
+Alternatively, you can use react-router-dom to create a separate page for the `PostForm` component in the `pages` folder. You would add a route to the `App.tsx` file and add a link to the `PostForm` page.
+
+### 5. Add the `PostList` component to the `HomePage` page
+
+At the moment, the `HomePage` page is just rendering a `<h1>` tag.
+
+We will add the `PostList` component to the `HomePage` page.
+
+- In the `HomePage` file, add:
+
+```
+import { PostList } from '../components/PostList';
+
+export const HomePage = () => {
+  return (
+    <div>
+      <h1>Home Page</h1>
+      <PostList />
+    </div>
+  );
+};
+```
+
+When you run the app, you should see the `PostList` component rendered on the Home page.
+
+### 6. Test the ReactTS app (Manually)
+
+Manually test the ReactTS app by running `npm start` and checking the Home page.
+
+You should see the `PostList` component rendered on the Home page, and the number of posts in the database and each post title and content rendered.
+
+You can also try creating Jest tests for the components in the `__tests__` folder.
+
+# Checkpoint 2 - ReactTS app
+
+At this point, you should have:
+
+- A ReactTS app with a `PostList` component that renders the number of posts in the database and each post title and content
+- These components:
+  - `Navbar`
+  - `PostList`
+  - `PostItem`
+  - `PostForm`
+- (Optional) tests for the components
+
+Additionally, after manually testing the app, you should be able to see the `PostList` component rendered on the Home page.
+
+We still need to finish functionality for Creating, Updating and Deleting posts.
