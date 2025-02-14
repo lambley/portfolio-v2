@@ -22,7 +22,7 @@ export default async function Projects() {
   );
 
   return (
-    <main className="w-full h-[calc(100vh-96px)] p-4 flex flex-col items-center justify-center bg-main text-text">
+    <main className="w-full p-4 flex flex-col items-center justify-center bg-main text-text">
       <h1 className="text-4xl font-bold">Projects</h1>
       <p className="mt-4">
         Projects I have worked on for learning purposes and for fun. Some go way

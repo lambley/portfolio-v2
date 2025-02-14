@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className="w-3/4 m-auto bg-main text-text"
+        className="w-11/12 m-auto bg-main text-text"
       >
         <Navigation />
         {children}
