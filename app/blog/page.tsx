@@ -1,8 +1,9 @@
 import Link from "next/link";
+import type { Blog } from "@/types/shared";
 import { fetchBlogs } from "@/lib/blogs";
 
 export default async function Blog() {
-  const posts = await fetchBlogs();
+  const posts: Blog[] = await fetchBlogs();
 
   return (
     <main className="w-full p-4 flex flex-col items-center justify-center bg-main text-text">

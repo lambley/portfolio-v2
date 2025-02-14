@@ -39,22 +39,22 @@ const blogPosts = [
 const portfolioItems = [
   {
     title: "Project 1",
-    href: "/portfolio/project-1",
+    href: "/projects/project-1",
     description: "A project.",
   },
   {
     title: "Project 2",
-    href: "/portfolio/project-2",
+    href: "/projects/project-2",
     description: "Another project.",
   },
   {
     title: "Project 3",
-    href: "/portfolio/project-3",
+    href: "/projects/project-3",
     description: "Yet another project.",
   },
   {
     title: "All projects",
-    href: "/portfolio",
+    href: "/projects",
     description: "All portfolio items.",
   },
 ];
@@ -91,7 +91,7 @@ export default function Navigation() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuTrigger className="m750:max-w-[80px] m750:text-xs">
-              Portfolio
+              Projects
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[200px] gap-3 p-4">
