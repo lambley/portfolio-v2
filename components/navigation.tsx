@@ -33,7 +33,7 @@ const portfolioItems = [
 
 export default function Navigation() {
   return (
-    <div className="w-fit flex justify-center mx-auto lg:mt-4 lg:mb-0 lg:sticky lg:top-4 mb-4 bottom-0 absolute left-0 right-0">
+    <div className="w-fit h-16 flex justify-center mx-auto lg:mt-4 lg:mb-0 lg:sticky lg:top-4 mb-4 bottom-0 absolute left-0 right-0">
       <NavigationMenu className="z-[5] max-w-[1200px] w-full px-4">
         <NavigationMenuList className="flex justify-between w-full">
           <NavigationMenuItem>
