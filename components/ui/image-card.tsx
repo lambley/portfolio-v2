@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 type Props = {
   imageUrl: string;
@@ -15,7 +16,13 @@ export default function ImageCard({
 }: Props) {
   return (
     <figure className="w-[250px] overflow-hidden rounded-base border-2 border-border bg-bg font-base shadow-shadow">
-      <img className="w-full aspect-[4/3]" src={imageUrl} alt="image" />
+      <Image
+        className="w-full aspect-[4/3]"
+        src={imageUrl}
+        width={500}
+        height={375}
+        alt="image"
+      />
       <figcaption className="border-t-2 text-mtext border-border p-4 mt-0 flex flex-col gap-2">
         <div>{caption}</div>
         <Link href={link} passHref>

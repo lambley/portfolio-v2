@@ -9,7 +9,7 @@ export default async function Blog() {
     <main className="w-full p-4 flex flex-col items-center justify-center bg-main text-text">
       <h1 className="text-4xl font-bold">Blog</h1>
       <p className="mt-4">
-        A few articles and guides I've put together in my Web Development
+        A few articles and guides I have put together in my Web Development
         journey.
       </p>
       <ul className="mt-4 list-disc">

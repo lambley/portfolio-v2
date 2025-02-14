@@ -1,5 +1,3 @@
-import { create } from "domain";
-
 export async function fetchProjects() {
   const projects = [
     {
