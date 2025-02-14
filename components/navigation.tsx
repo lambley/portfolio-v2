@@ -18,17 +18,45 @@ import {
 import { cn } from "@/lib/utils";
 
 const blogPosts = [
-  { title: "Post 1", href: "/blog/post-1" },
-  { title: "Post 2", href: "/blog/post-2" },
-  { title: "Post 3", href: "/blog/post-3" },
-  { title: "All posts", href: "/blog" },
+  {
+    title: "Part 1: How to Build a Ruby on Rails and ReactTS App",
+    href: "/blog/post-1",
+    description: "Building the Rails app.",
+  },
+  {
+    title: "Part 2: How to Build a Ruby on Rails and ReactTS App",
+    href: "/blog/post-2",
+    description: "Building the ReactTS app.",
+  },
+  {
+    title: "Part 3: How to Build a Ruby on Rails and ReactTS App",
+    href: "/blog/post-3",
+    description: "Setting up the API.",
+  },
+  { title: "All posts", href: "/blog", description: "All blog posts." },
 ];
 
 const portfolioItems = [
-  { title: "Project 1", href: "/portfolio/project-1" },
-  { title: "Project 2", href: "/portfolio/project-2" },
-  { title: "Project 3", href: "/portfolio/project-3" },
-  { title: "All projects", href: "/portfolio" },
+  {
+    title: "Project 1",
+    href: "/portfolio/project-1",
+    description: "A project.",
+  },
+  {
+    title: "Project 2",
+    href: "/portfolio/project-2",
+    description: "Another project.",
+  },
+  {
+    title: "Project 3",
+    href: "/portfolio/project-3",
+    description: "Yet another project.",
+  },
+  {
+    title: "All projects",
+    href: "/portfolio",
+    description: "All portfolio items.",
+  },
 ];
 
 export default function Navigation() {
@@ -55,7 +83,7 @@ export default function Navigation() {
                     title={post.title}
                     href={post.href}
                   >
-                    {post.title}
+                    {post.description}
                   </ListItem>
                 ))}
               </ul>
@@ -73,7 +101,7 @@ export default function Navigation() {
                     title={item.title}
                     href={item.href}
                   >
-                    {item.title}
+                    {item.description}
                   </ListItem>
                 ))}
               </ul>

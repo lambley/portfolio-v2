@@ -1,0 +1,53 @@
+# Design Patterns - A few examples I have used recently
+
+# What are design patterns in software development?
+
+One of the best ways to make code easier to read and maintain is to use design patterns. Design patterns are reusable methods and soluitions to common problems in software development.
+
+For example, in a very simple sense, a method is a design pattern. You may have a snippet of code you reuse throughout an application for concatenating a string. Instead, most developers would create a method that can be called whenever needed.
+
+The benefits of design patterns like this - using a handy acronym - **RUM**:
+
+- **Readability** (by reducing the amount of code)
+- **Unit Testing** (by creating smaller units of code)
+- **Maintainability** (by reducing the amount of code)
+
+**Why are these important?** If you're like me and you're working on multiple projects (at work and personal projects), improving readability and maintainability is a life-saver. Even if you're working alone, you're writing code for your future self - **maintainability matters**.
+
+## A few examples
+
+### Repository pattern
+
+Even if you use an ORM in your application, you may still want to use the repository pattern. This is a great way to separate your data access logic from your business logic.
+
+For example, you may have a `User` model and a `UserRepository` class. The `UserRepository` class would contain methods for accessing the database, such as `getUserById`, `getUserByEmail`, `createUser`, `updateUser`, `deleteUser`, etc.
+
+**Readability**: no need to multiple database connections throughout your application - instead, you can call the `UserRepository` methods.
+**Unit testing**: you can easily mock the `UserRepository` class and test your business logic. Almost impossible to do this if you're using an ORM directly in your business logic - as I learned in a recent NestJS project.
+**Maintainability**: if you need to change your database connection, you only need to change it in one place.
+
+### Presenter Pattern
+
+I've mainly come across this pattern in Ruby on Rails applications. The presenter pattern is a great way to separate your business logic from your view logic.
+
+For example, you may have a `User` model and a `UserPresenter` class. The `UserPresenter` class would contain methods for formatting data for the view, such as `fullName`, `avatarUrl`, `createdAt`, etc.
+
+Views in a fullstack Rails application can become chunky and messy over time. There may be conditional logic, loops, and other logic that doesn't belong in the view - and that doesn't belong in the model or controller either. The presenter pattern is a great way to clean up your views.
+
+**Readability**: no need to add conditional logic, loops, etc. to your views - instead, you can call the `UserPresenter` methods.
+**Unit testing**: it's much easier to test your view logic when it's separated from your business logic.
+**Maintainability**: views are smaller, logic is encapsulated in the presenter class, and you can easily change the view logic without affecting the business logic.
+
+### Service Object Pattern
+
+Controllers should only be concerned with handling requests and responses. If there's business logic in controllers - e.g. calling a third-party API - it can become messy and difficult to maintain. A preference in this pattern is to move such logic to a service object.
+
+Service objects aren't restricted to APIs and can hold other business logic like sending emails, processing payments, etc. Then, if a controller needs to use that logic, it simply calls the service object.
+
+**Readability**: controllers are smaller and easier to read.
+**Unit testing**: it's much easier to test your business logic when it's separated from your controllers.
+**Maintainability**: controllers are smaller, logic is encapsulated in the service object, and you can easily change the business logic without affecting the controller.
+
+## Conclusion
+
+There are many more design patterns out there. I've only covered a few that I've used recently. I hope this article has been useful and you can start using design patterns in your applications.

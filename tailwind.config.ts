@@ -42,7 +42,61 @@ export default {
       fontFamily: {
         "public-sans": ['"Public Sans"', "sans-serif"],
       },
+      typography: (theme: (arg0: string) => any) => ({
+        DEFAULT: {
+          css: {
+            h1: {
+              marginTop: theme("spacing.8"),
+              fontWeight: theme("fontWeight.semibold"),
+              color: theme("colors.black"),
+              fontSize: theme("fontSize.5xl"),
+            },
+            h2: {
+              fontSize: theme("fontSize.4xl"),
+            },
+            h3: {
+              fontSize: theme("fontSize.3xl"),
+            },
+            h4: {
+              fontSize: theme("fontSize.2xl"),
+            },
+            h5: {
+              fontSize: theme("fontSize.xl"),
+            },
+            h6: {
+              fontSize: theme("fontSize.lg"),
+            },
+            pre: {
+              backgroundColor: theme("colors.gray.800"),
+              color: theme("colors.white"),
+              borderRadius: theme("borderRadius.lg"),
+              fontFamily: theme("fontFamily.mono"),
+              fontWeight: theme("fontWeight.normal"),
+              boxShadow: theme("boxShadow.lg"),
+              padding: `${theme("spacing.8")}`,
+            },
+            code: {
+              color: theme("colors.white"),
+              backgroundColor: theme("colors.gray.800"),
+              borderRadius: theme("borderRadius.lg"),
+              fontFamily: theme("fontFamily.mono"),
+              fontWeight: theme("fontWeight.normal"),
+              boxShadow: theme("boxShadow.lg"),
+              padding: `${theme("spacing.2")} ${theme("spacing.4")}`,
+            },
+            "code::before": {
+              content: '""',
+            },
+            "code::after": {
+              content: '""',
+            },
+            "h1 code, h2 code, h3 code, h4 code, h5 code, h6 code, blockquote code": {
+              color: theme("colors.white"),
+            },
+          },
+        },
+      }),
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;

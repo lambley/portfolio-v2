@@ -1,0 +1,325 @@
+# How to create a small microservice app with Ruby on Rails (RoR) and TypeScript React (ReactTS) (Part 3)
+
+How to use this Tutorial:
+
+- Read it! There's a lot in here to help with learning and understanding basic microservice architecture e.g. CORS policies
+- Bullet pointed sections are Actions - these are what you need to do
+- Give me any feedback if there are any mistakes in the tutorial
+
+Advanced Tutorial that requires some basic knowledge in:
+
+- Ruby on Rails setup (follow the basic tutorial)
+- RESTful APIs and [HTTP Request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
+- PostgreSQL
+- JavaScript
+
+Technical and installation requirements:
+
+- Ruby (and rbenv), v3.1.2
+- Ruby on Rails, v>7.0.6
+- NodeJS, v>16.13.1
+
+### 7. Add the `PostForm` component to the `PostList` component
+
+We will add the `PostForm` component to the `PostList` component that will be shown in a modal.
+
+- In the `PostList` file, add:
+
+```
+import { PostForm } from './PostForm';
+import { Modal, Button } from 'react-bootstrap';
+
+export const PostList = () => {
+  // rest stays the same
+  const [show, setShow] = useState(false);
+
+  return (
+    <div>
+      <Button
+        variant='primary'
+        onClick={() => setShow(true)}
+        className='mb-3'
+      >Create Post</Button>
+      <h1>Post List</h1>
+      <p># of posts: {posts.length}</p>
+      {posts.map((post) => (
+        <PostItem post={post} />
+      ))}
+    </div>
+  );
+}
+```
+
+We will use React Bootstrap's Modal component to show the `PostForm` component in a modal.
+
+- In the `PostList` file, add a functional component called `PostModal`:
+
+```
+const PostModal = () => {
+  return (
+    <Modal show={show} onHide={() => setShow(false)}>
+    <Modal.Header closeButton>
+      <Modal.Title>Create Post</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <PostForm />
+    </Modal.Body>
+  )
+}
+
+// update the return statement to render the PostModal component
+return (
+  <div>
+    <Button
+      variant='primary'
+      onClick={() => setShow(true)}
+      className='mb-3'
+    >Create Post</Button>
+    <h1>Post List</h1>
+    <p># of posts: {posts.length}</p>
+    {posts.map((post) => (
+      <PostItem post={post} />
+    ))}
+    <PostModal />
+  </div>
+);
+```
+
+When you run the app, you should see a button that opens a modal with the `PostForm` component.
+
+### 8. Add Edit functionality to the `PostItem` component
+
+If you've opted to handle edits in the `PostItem` component, you will need to add a button to open the `PostForm` component in a modal.
+
+- In the `PostItem` file, add:
+
+```
+import { PostForm } from './PostForm';
+import { Modal, Button } from 'react-bootstrap';
+
+export const PostItem = ({ post }: { post: Post }) => {
+  const [show, setShow] = useState(false);
+
+  const PostModal = () => {
+    return (
+      <Modal show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Post</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <PostForm />
+        </Modal.Body>
+      </Modal>
+    )
+  }
+
+  return (
+    <div>
+      <h3>{post.title}</h3>
+      <p>{post.content}</p>
+      <Button
+        variant='primary'
+        onClick={() => setShow(true)}
+        className='mb-3'
+      >Edit Post</Button>
+    </div>
+  );
+}
+```
+
+When you run the app, you should see a button that opens a modal with the `PostForm` component.
+
+### 9. Update `PostForm` to handle Create and Edit functionality
+
+We will update the `PostForm` component to handle Create and Edit functionality.
+
+- In the `PostForm` file, add:
+
+```
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Post } from '../Types/PostTypes';
+
+export const PostForm = ({ post }: { post?: Post }) => {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+
+  useEffect(() => {
+    if (post) {
+      setTitle(post.title);
+      setContent(post.content);
+    }
+  }, [post]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const post = {
+      title: title,
+      content: content,
+    };
+    console.log(post);
+  };
+
+  return (
+    <div>
+      <h1>{post ? 'Edit Post' : 'Create Post'}</h1>
+      <form onSubmit={handleSubmit}>
+        <div className='mb-3'>
+          <label htmlFor='title' className='form-label'>
+            Title
+          </label>
+          <input
+            type='text'
+            className='form-control'
+            id='title'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className='mb-3'>
+          <label htmlFor='content' className='form-label'>
+            Content
+          </label>
+          <textarea
+            className='form-control'
+            id='content'
+            rows={3}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          ></textarea>
+        </div>
+        <button type='submit' className='btn btn-primary'>
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+};
+```
+
+We will also need to update the `PostModal` component in the `PostList` component to pass in the `post` prop.
+
+- In the `PostList` file, add:
+
+```
+const PostModal = () => {
+  return (
+    <Modal show={show} onHide={() => setShow(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>{post ? 'Edit Post' : 'Create Post'}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <PostForm post={post} />
+      </Modal.Body>
+    </Modal>
+  )
+}
+```
+
+We will also need to update the `PostItem` component to pass in the `post` prop.
+
+- In the `PostItem` file, add:
+
+```
+const PostModal = () => {
+  return (
+    <Modal show={show} onHide={() => setShow(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>{post ? 'Edit Post' : 'Create Post'}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <PostForm post={post} />
+      </Modal.Body>
+    </Modal>
+  )
+}
+```
+
+It's optional but also good practice to refactor the `PostModal` component into a separate file.
+
+- In the `components` folder, create a `PostModal.tsx` file
+- In the `PostModal.tsx` file, add:
+
+```
+import React, { useState } from 'react';
+import { Modal } from 'react-bootstrap';
+import { PostForm } from './PostForm';
+import { Post } from '../Types/PostTypes';
+
+export const PostModal = ({ post }: { post?: Post }) => {
+  const [show, setShow] = useState(false);
+
+  return (
+    <Modal show={show} onHide={() => setShow(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>{post ? 'Edit Post' : 'Create Post'}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <PostForm post={post} />
+      </Modal.Body>
+    </Modal>
+  )
+}
+```
+
+- In the `PostList` file, add:
+
+```
+import { PostModal } from './PostModal';
+
+// update the return statement to render the PostModal component
+return (
+  <div>
+    <Button
+      variant='primary'
+      onClick={() => setShow(true)}
+      className='mb-3'
+    >Create Post</Button>
+    <h1>Post List</h1>
+    <p># of posts: {posts.length}</p>
+    {posts.map((post) => (
+      <PostItem post={post} />
+    ))}
+    <PostModal />
+  </div>
+);
+```
+
+- In the `PostItem` file, add:
+
+```
+import { PostModal } from './PostModal';
+
+// update the return statement to render the PostModal component
+return (
+  <div>
+    <h3>{post.title}</h3>
+    <p>{post.content}</p>
+    <Button
+      variant='primary'
+      onClick={() => setShow(true)}
+      className='mb-3'
+    >Edit Post</Button>
+    <PostModal post={post} />
+  </div>
+);
+```
+
+When you run the app, you should see a button that opens a modal with the `PostForm` component. The `PostForm` component should be pre-filled with the post data if you're editing a post.
+
+# Checkpoint 3 - ReactTS app
+
+At this point, you should have:
+
+- A ReactTS app with a `PostList` component that renders the number of posts in the database and each post title and content
+- These components:
+  - `Navbar`
+  - `PostList`
+  - `PostItem`
+  - `PostForm`
+  - `PostModal`
+- (Optional) tests for the components
+
+Additionally, after manually testing the app, you should be able to see the `PostList` component rendered on the Home page. You should also be able to create and edit posts.
+
+The remaining CRUD action left is Delete.

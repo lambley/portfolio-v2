@@ -1,0 +1,209 @@
+# How to setup reCAPTCHA v2 in a Rails and React app
+
+## Introduction
+
+What is reCAPTCHA and why is it important?
+
+[reCAPTCHA](https://www.google.com/recaptcha/about/) is a tool designed by Google to help protect websites from spam messages or bots. You've probably seen it before - v2 is the 'I'm not a robot' checkbox or spotting the bridge in a grid of images.
+
+Scripts, bots and most kinds of automated software can't solve these challenges in a convincingly 'human' way. For example, a bot would take a slow and direct route to a v2 checkbox, while a human may move their mouse around the page, click on other elements, and take a few seconds to check the box.
+
+As developers, we want to reduce the amount of 'noise' messages we receive via forms on our websites. reCAPTCHA is a great tool for doing this.
+
+## Getting started
+
+You should go to the [reCAPTCHA admin console](https://www.google.com/recaptcha/admin/create) and create a new site. You'll need to enter a label (for your own reference) and the domain of your website. You can also choose which reCAPTCHA version you want to use - we'll be using v2.
+
+> NOTE: for development purposes, you can add `Localhost` to the list of domains. This will allow you to test reCAPTCHA on your local machine.
+
+Once you've created your site, you'll be given a site key and a secret key. Keep a note of these - we'll need them later.
+
+# Adding reCAPTCHA to your Frontend app
+
+In this short guide, I will be using NextJS and React with TypeScript.
+
+We'll be using the [react-google-recaptcha](https://www.npmjs.com/package/react-google-recaptcha) package to add reCAPTCHA to our React app.
+
+If you're using a different Frontend, you'll need to find a package that works for you. But, the process remains similar:
+
+- Add the respective package to your project
+- Import the package into your app/component
+- Add the reCAPTCHA component to your form
+- Add the reCAPTCHA site key to your app - via an `.env` file or other secret management tool
+
+In the frontend, we will be using the reCAPTCHA element (tickbox in this case) which creates a token that we can send to the backend for verification. Although you can verify the token on the frontend, it's best practice to do this on the backend.
+
+## Adding the reCAPTCHA component
+
+- Save the site key to an environment variable i.e. in a `.env` file
+  - In your React app, you can save this variable as `REACT_APP_RECAPTCHA_SITE_KEY`.
+  - In a NextJS app, you will need to prefix the variable with `NEXT_PUBLIC_` i.e. `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`. Why? Read more [here](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser).
+- You can create a separate component for the reCAPTCHA element, or add it to your form component. In this case, we will add to the form component.
+- Import `ReCAPTCHA` from the `react-google-recaptcha`
+  - package: `import ReCAPTCHA from 'react-google-recaptcha'`
+- Add the reCAPTCHA element:
+
+```jsx
+  <ReCAPTCHA
+    ref={}
+    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+    onChange={}
+  />
+```
+
+- The `ref` prop is used to reset the reCAPTCHA element. We'll use this later.
+- The `sitekey` prop is the site key we saved earlier.
+- The `onChange` prop is a function that will be called when the user completes the reCAPTCHA challenge. We'll use this to save the token to state.
+- We will use `useState` to save the token to state:
+
+```tsx
+const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+```
+
+- We will also use `useRef` to create a reference to the reCAPTCHA element:
+
+```tsx
+const recaptchaRef = useRef<ReCAPTCHA>(null);
+```
+
+- Add a function to handle the captcha change - let's call it `handleCaptchaChange`:
+
+```tsx
+const handleCaptchaChange = (value: string | null) => {
+  if (value === null) {
+    return;
+  }
+  setRecaptchaToken(value);
+};
+```
+
+- Now, edit the reCAPTCHA element to use the `recaptchaRef` and `handleCaptchaChange`:
+
+```tsx
+<ReCAPTCHA
+  ref={recaptchaRef}
+  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+  onChange={handleCaptchaChange}
+/>
+```
+
+Hopefully, at this point, the reCAPTCHA should render on your form. If not, try restarting your console.
+
+One thing I had to do to get the initial reCAPTCH to work was to wrap the reCAPTCHA in a conditional statement. In TypeScript React apps, `process.env` is not treated as defined, even if it is explicitly defined in your `.env` file.
+
+```tsx
+{
+  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
+    <ReCAPTCHA
+      ref={recaptchaRef}
+      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+      onChange={handleCaptchaChange}
+    />
+  );
+}
+```
+
+## Resetting the reCAPTCHA element
+
+We need to reset the reCAPTCHA element when the form is submitted. This is so that the user can't submit the form multiple times with the same token.
+
+This is where `useRef` comes in. In your form's `onSubmit` function, you can reset the reCAPTCHA element by calling `recaptchaRef.current?.reset()`.
+
+e.g.
+
+```tsx
+// note: I'm using react-hook-form here
+const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  // ... other form submission logic
+
+  // check if the user has completed the reCAPTCHA challenge
+  if (recaptchaToken ===  || !recaptchaToken) {
+    // ... here you can also add a message to the user to complete the reCAPTCHA challenge, or some kind of loading or error handling
+
+    // if not, return early
+    return;
+  }
+
+  // ... submit request to backend - using a try/catch block
+  try {
+    // ... submit request to backend
+    // NOTE: remember to send the recaptchaToken to the backend for verification
+  } catch (error) {
+    // ... handle error
+  } finally {
+    // ... reset the reCAPTCHA element
+    recaptchaRef.current?.reset();
+  }
+}
+```
+
+In summary, use a `try/catch/finally` block (good practice) to make your request and in the `finally` block, reset the reCAPTCHA reference.
+
+Also, note that you should be sending the reCAPTCHA token to the backend for verification. We'll cover this in the next section.
+
+# Checkpoint
+
+You should now have a working reCAPTCHA element on your form. When the user completes the challenge, the token should be saved to state. When the form is submitted, the reCAPTCHA element should be reset - regardless of whether the form is submitted successfully or not.
+
+# Adding reCAPTCHA to your Backend app
+
+In my case, I did this in a Rails app. But, the process should be similar for other backend frameworks.
+
+- Store the server key we generated earlier in an environment variable. You can do this in your `.env` file.
+
+  > In my case, I didn't use the [`recaptcha`](https://github.com/ambethia/recaptcha) gem. This is a route you can take. For educational purposes, I chose to verify the token manually.
+
+- In your controller, you can create a method to verify the token:
+
+```ruby
+  def validate_recaptcha
+    recaptcha_secret_key = ENV['SERVER_RECAPTCHA_KEY']
+    recaptcha_response = params['captcha']
+
+    uri = URI('https://www.google.com/recaptcha/api/siteverify')
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+
+    request = Net::HTTP::Post.new(uri.path)
+    request.set_form_data(
+      'secret' => recaptcha_secret_key,
+      'response' => recaptcha_response
+    )
+
+    response = http.request(request)
+
+    if response.is_a?(Net::HTTPSuccess)
+      data = JSON.parse(response.body)
+      return data['success']
+    else
+      return false
+    end
+  end
+```
+
+- In the above code, this is what happens:
+  - We create a URI object for the reCAPTCHA verification endpoint
+  - We create a new HTTP object and set `use_ssl` to true
+  - We create a new POST request to the reCAPTCHA verification endpoint
+  - We set the form data to include the secret key and the token
+  - We send the request and parse the response
+  - If the response is successful, we return the `success` value from the response body
+- You can then use this method in your controller action for the form submission, e.g.:
+
+```ruby
+def some_form_method
+  if validate_recaptcha
+    # ... do something with the form data
+  else
+    # ... reject the form submission as the reCAPTCHA token is invalid
+  end
+end
+```
+
+# Conclusion
+
+You should now have a working reCAPTCHA on a React form with verification in your backend. Your form is now protected from spam messages and bots. Voilá!
+
+# Further reading
+
+- [reCAPTCHA v2 documentation](https://developers.google.com/recaptcha/docs/display)

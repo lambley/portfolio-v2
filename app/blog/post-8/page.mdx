@@ -1,0 +1,274 @@
+# Getting started with testing in Ruby on Rails
+
+## A quick guide to getting started with testing in Ruby on Rails
+
+### Why should you test your code?
+
+It might seem obvious to those working in software development already, but if you're a beginner and still learning, you might be wondering why it's so important. Here are some reasons why you should test your code:
+
+- **Automation**: You can run your tests automatically, so you don't have to manually test your code every time you make a change. Doubly so if you've setup a CI/CD pipeline, like with [GitHub Actions](https://www.agslambley.dev/blog/6) or CircleCI.
+- **Documentation**: Tests are a form of documentation, and can help you understand how your code works, and how it's supposed to work. In the past two jobs I've had, I've been able to use the tests to understand how the code works, and how it's supposed to work, without having to ask anyone.
+- **Confidence**: You can be confident that your code works as expected, and that you haven't broken anything. This is especially important if you're working on a large codebase, or if you're working on a team with multiple developers. Another thing to consider, is if you're working on platform changes, e.g. upgrading Rails or cloud providers, you can be confident that your code still works as expected.
+
+In short, testing your code is a good idea, and you should do it. It saves time, frustration, and money - all of which are important at work or personal projects.
+
+### What should you test?
+
+This is an interesting topic and there's some division on the extent of tests you should write. Some believe you should test everything, others that you should only test the important parts.
+
+There are definitely strategies you can use to help you decide what to test:
+
+- **Test levels**: There are [3 levels](https://en.wikipedia.org/wiki/Software_testing#Testing_levels): Unit, Integration and System testing. What you're responsible for will vary by workplace and team, but in general, as a developer you need to be writing at least unit tests. These are tests that test a single unit of code, e.g. a method or function. Integration tests test how multiple units work together, and system tests test the entire system, e.g. the website.
+- **Regression testing**: This is a technique that seeks to test new features for old bugs. It's sometimes an unintended consequence of a change that another piece of functionality breaks. Regression testing can be as simple as running all your tests after making a change, or as complex as having a suite of tests that test for possibly recurring bugs.
+- **Test coverage**: Most testing libraries will have a way of measuring how well your tests cover your code. For example, [SimpleCov](https://github.com/simplecov-ruby/simplecov) for Ruby or Jest's `--coverage` flag for JavaScript. This can help you identify areas of your code that aren't tested, and help you decide what to test. Test coverage has a few metrics that like function coverage (the percentage of functions tested), branch coverage (the percentage of branches tested), and line coverage (the percentage of lines tested). Find out more about test coverage [here](https://en.wikipedia.org/wiki/Code_coverage). In general, I try to aim for 90%+ test coverage, but this will vary by project and team.
+- **Feature testing**: This is another word for automated testing of the front-end, e.g. checking that images are displayed, button actions work, etc., all through the power of automated clicks. There's a few tools out there for this, that are all based on [Selenium](https://www.selenium.dev/) webdriver and use a lightweight version of a browser to run the tests. You might come across [Capybara](https://github.com/teamcapybara/capybara) or [Cucumber] (https://cucumber.io/), amongst others.
+
+## How to Test in Ruby on Rails
+
+### Installation
+
+[Rspec](https://rspec.info/) is a very common Ruby on Rails testing library. Be careful when you're first creating a new Rails app, as Rails will ask you if you want to use Rspec or not. If you're not sure, I'd recommend saying no, as it's easier to add it later than remove it.
+
+To install Rspec, add it to your Gemfile:
+
+```ruby
+group :development, :test do
+  gem 'rspec-rails', '~> 5.0.0' # or whatever the latest version is
+end
+```
+
+Then run `bundle install` to install it.
+
+Next, run the Rspec install generator:
+
+```zsh
+rails generate rspec:install
+```
+
+You should have a new folder called `spec` in your Rails app. This is where your tests will live. You can run your tests with `rspec` or `bundle exec rspec`.
+
+### Writing tests
+
+Let's say you have a `User` model with a few validations and a `full_name` method:
+
+```ruby
+class User < ApplicationRecord
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+  validates :email, presence: true, uniqueness: true
+
+  def full_name
+    first_name + ' ' + last_name
+  end
+end
+```
+
+There are a few things we would want to test here:
+
+- That a user is valid with a first name, last name and email
+- That a user is invalid without a first name, last name or email
+- That a user is invalid with a duplicate email
+- That the `full_name` method returns the correct value
+
+For such a simple model, we could write all these tests in one file, but as your models get more complex, you'll want to split them up into separate files. For example, you might have a `user_spec.rb` file for the validations, and a `user_methods_spec.rb` file for the methods.
+
+For now, let's write all the tests in one file:
+
+```ruby
+# spec/models/user_spec.rb
+require 'rails_helper'
+
+RSpec.describe User, type: :model do
+  describe 'validations' do
+    it 'is valid with a first name, last name and email' do
+      user = User.new(
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'test@test.com'
+      )
+      expect(user).to be_valid
+    end
+
+    it 'is invalid without a first name' do
+      user = User.new(
+        last_name: 'Doe',
+        email: 'test@test.com'
+      )
+      expect(user).to_not be_valid
+    end
+
+    # ... other invalid tests for last name and email
+
+    it 'is invalid with a duplicate email' do
+      user1 = User.create(
+        first_name: 'John',
+        last_name: 'Doe',
+        email: 'test@test.com'
+      )
+      user2 = User.new(
+        first_name: 'Jane',
+        last_name: 'Doe',
+        email: 'test@test.com'
+      )
+      expect(user2).to_not be_valid
+    end
+
+    describe '#full_name' do
+      it 'returns the full name of the user' do
+        user = User.new(
+          first_name: 'John',
+          last_name: 'Doe',
+          email: 'test@test.com'
+        )
+        expect(user.full_name).to eq('John Doe')
+      end
+    end
+  end
+end
+```
+
+There's a lot going on here, so let's break it down.
+
+First, we're requiring `rails_helper`, which is a file that Rspec generates for us. It loads Rails and Rspec, so we can use them in our tests. You can load other files here too, if you need to, e.g. files for factories or helpers functions.
+
+There are few conventions to note here (that follow the [Arrange-Act-Assert pattern](https://xp123.com/articles/3a-arrange-act-assert/)):
+
+- **`describe` blocks**: Useful for grouping together similar types of tests, e.g. validations or methods.
+- **`expect`**: This is the main assertion method in Rspec. There are more plenty more that you can read about [here](https://www.rubypigeon.com/posts/rspec-expectations-cheat-sheet/).
+- **`be_valid`**: This is a matcher that checks if the object is valid. There are more that you can read about [here](https://www.rubypigeon.com/posts/rspec-expectations-cheat-sheet/).
+
+### Improving your tests
+
+In this example, there is a fair amount of repition. In software development, repeated code is bad - it leads to difficult to maintain code, and potential bugs. So how can we improve this?
+
+Factories.
+
+Factories are reusable pieces of code that can help generate objects for testing. In the example above, we're defining the new user each time in all the tests. Instead, we can delegate that to a factory, and just use the factory in our tests.
+
+In Rails, there are a few popular options for factories, but the most popular is [FactoryBot](https://github.com/thoughtbot/factory_bot). It's easy to use, and integrates well with Rspec.
+
+To install it, add it to your Gemfile:
+
+```ruby
+group :development, :test do
+  # ... other gems
+  gem 'factory_bot_rails', '~> 6.2.0' # or whatever the latest version is
+end
+```
+
+Then run `bundle install` to install it.
+
+Next, create a `support` folder in your `spec` folder, and add a `factory_bot.rb` file:
+
+```ruby
+# spec/support/factory_bot.rb
+RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
+end
+```
+
+In the `rails_helper.rb` file, add the following line:
+
+```ruby
+# spec/rails_helper.rb
+require 'support/factory_bot'
+```
+
+This will load the `factory_bot` methods into our tests.
+
+After this, we can create a factory for our `User` model - it's up to you where you put it, but I like to put it in a `factories` folder in the `spec` folder:
+
+```ruby
+# spec/factories/users.rb
+
+FactoryBot.define do
+  factory :user do
+    first_name { 'John' }
+    last_name { 'Doe' }
+    email { 'test@test.com' }
+  end
+end
+```
+
+There you have it - a factory for our `User` model. Now we can use it in our tests:
+
+```ruby
+# spec/models/user_spec.rb
+require 'rails_helper'
+
+RSpec.describe User, type: :model do
+  describe 'validations' do
+    it 'is valid with a first name, last name and email' do
+      user = create(:user)
+      expect(user).to be_valid
+    end
+
+    it 'is invalid without a first name' do
+      user = create(:user, first_name: nil)
+      expect(user).to_not be_valid
+    end
+
+    # ... other invalid tests for last name and email
+
+    it 'is invalid with a duplicate email' do
+      user = create(:user)
+      user2 = create(:user, email: user.email)
+      expect(user2).to_not be_valid
+    end
+  end
+
+  describe '#full_name' do
+    it 'returns the full name of the user' do
+      user = create(:user)
+      expect(user.full_name).to eq('John Doe')
+    end
+  end
+end
+```
+
+But wait - there's still some duplicated code here. We're creating a user in every test, and we're checking if the user is valid in every test. We can improve this by using Rspec's `subject` methods.
+
+`subject` is a method that defines the subject of the test. In our case, the subject is the user. We can use these methods to clean up our tests:
+
+```ruby
+# spec/models/user_spec.rb
+require 'rails_helper'
+
+RSpec.describe User, type: :model do
+  describe 'validations' do
+    subject { create(:user) }
+
+    it 'is valid with a first name, last name and email' do
+      expect(subject).to be_valid
+    end
+
+    it 'is invalid without a first name' do
+      subject.first_name = nil
+      expect(subject).to_not be_valid
+    end
+
+    # ... other invalid tests for last name and email
+
+    it 'is invalid with a duplicate email' do
+      user2 = create(:user, email: subject.email)
+      expect(user2).to_not be_valid
+    end
+  end
+
+  describe '#full_name' do
+    subject { create(:user) }
+
+    it 'returns the full name of the user' do
+      expect(subject.full_name).to eq('John Doe')
+    end
+  end
+end
+```
+
+One thing that you might be wondering is what's happening on `subject.first_name = nil` and `user2 = create(:user, email: subject.email)`. Factory objects are mutable, so we can change their attributes. This is useful for testing validations - as we can setup the Factory with a valid object and make it invalid by changing an attribute in the tests.
+
+## What next?
+
+What I've covered here is the most basic on unit tests - for a database model. In a real world project, you'll be testing requests, controllers, views, and more.
+
+If you're still learning, I'd recommend making a simple, working app with full CRUD actions and some basic routes. Then, try to write tests for it and get that test coverage as high as possible. Practice makes perfect, and you'll get better at writing tests the more you do it.

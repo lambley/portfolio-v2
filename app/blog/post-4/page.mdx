@@ -1,0 +1,233 @@
+# How to create a small microservice app with Ruby on Rails (RoR) and TypeScript React (ReactTS) (Part 3)
+
+How to use this Tutorial:
+
+- Read it! There's a lot in here to help with learning and understanding basic microservice architecture e.g. CORS policies
+- Bullet pointed sections are Actions - these are what you need to do
+- Give me any feedback if there are any mistakes in the tutorial
+
+Advanced Tutorial that requires some basic knowledge in:
+
+- Ruby on Rails setup (follow the basic tutorial)
+- RESTful APIs and [HTTP Request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
+- PostgreSQL
+- JavaScript
+
+Technical and installation requirements:
+
+- Ruby (and rbenv), v3.1.2
+- Ruby on Rails, v>7.0.6
+- NodeJS, v>16.13.1
+
+### 10. Add Delete functionality to the `PostItem` component
+
+Delete can be handled in the `PostItem` component with a button.
+
+- In the `PostItem` file, add:
+
+```
+import axios from 'axios';
+
+export const PostItem = ({ post }: { post: Post }) => {
+  // rest stays the same
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/posts/${post.id}`);
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+  return (
+    <div>
+      <h3>{post.title}</h3>
+      <p>{post.content}</p>
+      <Button
+        variant='primary'
+        onClick={() => setShow(true)}
+        className='mb-3'
+      >Edit Post</Button>
+      <Button
+        variant='danger'
+        onClick={handleDelete}
+        className='mb-3'
+      >Delete Post</Button>
+    </div>
+  );
+}
+```
+
+When you run the app, you should be able to delete posts.
+
+It's best practice to add a confirmation modal before deleting a post, so that the user can confirm that they want to delete the post.
+
+- In the `PostItem` file, add:
+
+```
+import { Modal, Button } from 'react-bootstrap';
+
+export const PostItem = ({ post }: { post: Post }) => {
+  // rest stays the same
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const DeleteModal = () => {
+    return (
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Post</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete this post?</p>
+          <Button
+            variant='danger'
+            onClick={handleDelete}
+            className='mb-3'
+          >Delete Post</Button>
+        </Modal.Body>
+      </Modal>
+    )
+  }
+
+  return (
+    <div>
+      <h3>{post.title}</h3>
+      <p>{post.content}</p>
+      <Button
+        variant='primary'
+        onClick={() => setShow(true)}
+        className='mb-3'
+      >Edit Post</Button>
+      <Button
+        variant='danger'
+        onClick={() => setShowDeleteModal(true)}
+        className='mb-3'
+      >Delete Post</Button>
+      <DeleteModal />
+    </div>
+  );
+}
+```
+
+When you run the app, you should see a button that opens a modal with the `PostForm` component. The `PostForm` component should be pre-filled with the post data if you're editing a post.
+
+#### 11. Check the RoR API app and add CORS updates
+
+You may have some issues creating, editing, and deleting posts at this point.
+
+This may be due to CORS issues. You can check the Rails API app logs to see if there are any CORS errors.
+
+We can make some changes to the `posts_controller.rb` file to allow requests from the ReactTS app.
+
+- In the `posts_controller.rb` file, add:
+
+```
+before_action :set_access_control_headers
+
+# add a new private method
+
+def set_access_control_headers
+  headers['Access-Control-Allow-Origin'] = '*'
+  headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
+  headers['Access-Control-Request-Method'] = '*'
+  headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+end
+```
+
+You will need to update this later if you deploy the app i.e. to add the production URL.
+
+# Checkpoint 4 - ReactTS app
+
+You should now have a basic CRUD app with a ReactTS frontend and a Rails API backend.
+
+You can continue to add more features to the app, such as:
+
+- Add a Search bar
+- Add pagination
+- Add authentication using Devise and JWT
+- Add a User model
+- Add a Comment model
+- Add a Like model
+- Optimize the app for performance
+- Add tests for the ReactTS app
+- Add tests for the Rails API app
+- Better styling
+- More types for the ReactTS app e.g. `PostListProps`, `PostItemProps`, `PostFormProps`
+- Other pages e.g. About page, Contact page
+- Deploy the app to Heroku and Vercel
+
+# A Note about Authentication
+
+If you want to add authentication to the app, you can use Devise and JWT.
+
+Devise is a popular authentication gem for Rails. JWT is a popular authentication method for APIs.
+
+- In the `Gemfile`, add:
+
+```
+gem 'devise'
+gem 'devise-jwt'
+```
+
+- Run `bundle install`
+- Run `rails generate devise:install`
+- Run `rails generate devise User`
+- Run `rails generate devise:controllers users`
+- Run `rails generate devise:jwt_secret`
+
+This may not work in generating the JWT secret. You can also use `rails secret` to generate a secret key and add it to an `.env` file in the RoR root app. Then you would add `config.jwt_secret = ENV['JWT_SECRET']` to the `devise.rb` file.
+
+- Run `rails db:migrate`
+- In the `routes.rb` file, add:
+
+```
+devise_for :users,
+  path: '',
+  path_names: {
+    sign_in: 'login',
+    sign_out: 'logout',
+    registration: 'signup'
+  },
+  controllers: {
+    sessions: 'users/sessions',
+    registrations: 'users/registrations'
+  }
+  # rest of the routes stay the same
+```
+
+- In the `sessions_controller.rb` file, add:
+
+```
+respond_to :json
+
+def create
+  super do |user|
+    if request.format.json?
+      render json: {
+        user: user,
+        token: JWT.encode({
+          user_id: user.id,
+          username: user.username,
+        }, ENV['DEVISE_JWT_SECRET_KEY'], 'HS256')
+      } and return
+    end
+  end
+end
+
+def destroy
+  signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+
+  if request.format.json?
+    render json: { message: 'Signed out successfully' }, status: :ok
+  else
+    redirect_to after_sign_out_path_for(resource_name)
+  end
+end
+```
+
+You will also need to add login forms to the ReactTS app and update the `PostList` component to fetch the posts based on the user.
+
+Additionally, you may need to add a method to check the JWT received by the RoR API app is valid before allowing the user to access the API endpoints.
+
+This is one of the trickier parts of the app, so you may want to skip this for now and come back to it later.

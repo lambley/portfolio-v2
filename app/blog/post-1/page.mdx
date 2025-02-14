@@ -1,0 +1,344 @@
+# How to create a small microservice app with Ruby on Rails (RoR) and TypeScript React (ReactTS) (Part 1)
+
+How to use this Tutorial:
+
+- Read it! There's a lot in here to help with learning and understanding basic microservice architecture e.g. CORS policies
+- Bullet pointed sections are Actions - these are what you need to do
+- Give me any feedback if there are any mistakes in the tutorial
+
+Advanced Tutorial that requires some basic knowledge in:
+
+- Ruby on Rails setup (follow the basic tutorial)
+- RESTful APIs and [HTTP Request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
+- PostgreSQL
+- JavaScript
+
+Technical and installation requirements:
+
+- Ruby (and rbenv), v3.1.2
+- Ruby on Rails, v>7.0.6
+- NodeJS, v>16.13.1
+
+## Creating the Rails API
+
+We will use have this folder structure:
+
+```
+grad_project
+├── api # <-- Rails API app
+│   ├── app
+│   │   ├── controllers
+│   │   │   └── api
+│   │   │       └── v1
+│   │   │           └── posts_controller.rb
+│   │   └── models
+│           └── post.rb
+├── client # <-- ReactTS app
+│   └── src
+...
+```
+
+### 0. Setup Ruby on Rails (RoR)
+
+- Install Ruby on Rails (RoR) - [official docs](https://guides.rubyonrails.org/getting_started.html)
+- Instructions vary depending on OS
+
+### 1. rails new [API_APP_NAME] --api
+
+With Ruby on Rails (RoR), the standard `rails new` generator usually creates a full MVC RoR app, with RoR Views.
+
+In order to use a different Frontend framework, it is best practice to make the RoR app API-only - that is, only Model and Controllers (and other middleware) but no Views.
+
+You can generate this with:
+
+```
+rails new [API_APP_NAME] --api -T
+```
+
+**Note**: I usually specify the `-T` flag to prevent autogeneration of `Minitest` unit test, as I prefer to use `RSpec` for tests (more about [RSpec](https://rspec.info/))
+
+The `--api` flag specifies this is an API-only app, preventing autogeneration of Views
+
+- Do the usual `bundle install` and other configurations you may do now
+
+### 2. Setup and enabling CORS
+
+Cross Origin Resource Sharing ([CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)) is a form of security that checks the origin (URL) of HTTP requests.
+
+The app that we will build will have two origin URLs - in our local development environment, this will most likely be `localhost:3000` for the RoR app and `localhost:3001` for the ReactTS app.
+
+As such, you need to update the CORS policy in the RoR app to allow requests from the ReactTS app we will build
+
+- Add or uncomment `gem 'rack-cors'` in the `gemfile`
+- Run `bundle install`
+- Find this file `config/initializers/cors.rb` and update the `origins` line to `origins '*'` - this will accept requests from any origin. The file should look like this:
+
+```ruby
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins '*'
+resource '*',
+      headers: :any,
+      methods: [:get, :post, :put, :patch, :delete, :options, :head]
+  end
+end
+```
+
+- FOR LATER: we will update the origins later to accept requests from the ReactTS app at whatever port you specify, e.g. `localhost:3001`, as well as for a future deployed app URL (as a comma-delimited list of string URLS)
+
+### 3a. Setup test packages (OPTIONAL)
+
+For automated testing, we will use RSpec ([official docs](https://github.com/rspec/rspec-rails)). It is important to set this up now, as RSpec will autogenerate test files when you generate Models and Controllers later on.
+
+- Add `gem 'rspec-rails'` to the gemfile
+  - best practice is to add it to the `group :development, :test do ... end` block, so the test packages aren't used in the deployed app
+- Also add `gem 'factory_bot_rails'`
+  - this is used to programmatically generate instances for automated testing
+- Add `gem 'simplecov'`
+  - this is used to generate test coverage reports
+  - Read the official docs on how to set this up ([docs](https://github.com/simplecov-ruby/simplecov))
+- Run `bundle install`
+- Run `rails generate rspec:install` to generate boilerplate configurations
+
+That's all for now.
+
+### 3. Generate Post Model, Controller and Routes
+
+For the purpose of this tutorial, we will create one Post model and one Post controller.
+
+**Note**: from here, I will be using some shortened commands in RoR, like `rails g` instead of `rails generate`
+
+- Run `rails g model post title:string content:text`
+  - remember this must be singular - this generates a Model (and test file, if you setup RSpec) called Post with title and content fields
+- (OPTIONAL) add validations to the Post model, if needed
+- Run `rails g controller posts index show create update delete`
+  - this will generate a `posts_controller` file with empty methods called index, show, create, update and delete.
+- Run `rails db:create db:migrate`
+  - you _may_ run into errors here where you need to add a username and password to the `config/database.yml` file.
+  - The username provided needs to exist in your PostgresSQL local setup and have permissions to create tables
+
+We will use RESTful API naming convention best practice for versioning and move the `posts_controller.rb` file to a new folder. You can read more on this [stack overflow post](https://stackoverflow.com/questions/389169/best-practices-for-api-versioning).
+
+- In the `controllers` folder, create a new folder `api`
+- In the `api` folder, create a new folder called `v1`
+- Move the `posts_controller.rb` to the `v1` folder
+- In the `posts_controller.rb` file, change `class PostsController < ApplicationController` to `class Api::V1::PostsController < ApplicationController`
+
+To help with learning, we will add some comments to the `posts_controller.rb` file to show where these methods should route to:
+
+```
+class Api::v1::PostsController < ApplicationController
+  # GET /posts
+  def index
+  end
+
+  # GET /posts/:id
+  def show
+  end
+
+  # POST /posts
+  def create
+  end
+
+  # PATCH/PUT /posts/:id
+  def update
+  end
+
+  # DELETE /posts/:id
+  def destroy
+  end
+end
+```
+
+Now it's time to update the `routes.rb` file:
+
+- In the `routes.rb` file, add:
+
+```
+namespace :api do
+  namespace :v1 do
+
+  end
+end
+```
+
+- In the :v1 block, add `resources :posts, only: [:index, :show, :create, :update, :delete]`
+  - The `resources` keyword handles the route mapping, so you don't need to specify each HTTP request method
+
+### 4. Seed the database
+
+At the moment, we don't have any data in the db to test our `post_controller.rb` endpoints.
+
+We will create/update the `db/seeds.rb` file to create a few posts for us to test
+
+- At the top of the `db/seeds.rb` file add `require 'faker`
+- Let's create 10 posts using Ruby's `times` iterator, add this block:
+
+```
+10.times do
+
+end
+```
+
+- In that block, add a `post` variable that we will create a Post instance in:
+
+```
+post = Post.create(
+  title: Faker::Lorem.sentence(word_count: 3),
+  content: Faker::Lorem.paragraph(sentence_count: 2)
+)
+```
+
+- (OPTIONAL) add some `print` statements to the file to get feedback when instances are created e.g. add `print 'Created \#{post}'` in the Post.create block
+
+The seed file should look something like this:
+
+```
+require 'faker'
+
+10.times do
+  post = Post.create(
+    title: Faker::Lorem.sentence(word_count: 3),
+    content: Faker::Lorem.paragraph(sentence_count: 2)
+  )
+  print 'Created \#{post}'
+end
+```
+
+- Run `rails db:seed` to seed the database
+
+### 5. Add callbacks and private methods to the Post controller
+
+There's one more thing that can improve the `posts_controller.rb` file - callbacks and private methods.
+
+- Add a `before_action` callback to the `posts_controller.rb` file:
+  - This will run the `set_post` method before the `show`, `update` and `destroy` methods
+
+```
+before_action :set_post, only: [:show, :update, :destroy]
+```
+
+- Add a private method `set_post` to the `posts_controller.rb` file:
+  - This will find the Post instance by the `:id` param in the URL
+
+```
+private
+
+def set_post
+  @post = Post.find(params[:id])
+end
+```
+
+**NOTE**: place all your private methods at the bottom of the controller file, below the `private` keyword
+
+We also need to add a `post_params` method to the `posts_controller.rb` file.
+
+Why? This is a security measure to prevent malicious users from sending requests with extra parameters that we don't want to be saved in the database.
+
+- Add a private method `post_params` to the `posts_controller.rb` file:
+  - This will only allow the `title` and `content` parameters to be saved in the database
+
+```
+def post_params
+  params.require(:post).permit(:title, :content)
+end
+```
+
+Whenever you add new fields to the database, you will need to update this method to allow those fields to be saved.
+
+### 6. Write the CRUD methods in the Post controller
+
+Now we can write the CRUD methods in the `posts_controller.rb` file.
+
+- In the `index` method, add:
+
+```
+@posts = Post.all
+render json: @posts
+```
+
+- In the `show` method, add:
+
+```
+render json: @post
+```
+
+- In the `create` method, add:
+
+```
+@post = Post.new(post_params)
+
+if @post.save
+  render json: @post, status: :created
+else
+  render json: @post.errors, status: :unprocessable_entity
+end
+```
+
+- In the `update` method, add:
+
+```
+if @post.update(post_params)
+  render json: @post
+else
+  render json: @post.errors, status: :unprocessable_entity
+end
+```
+
+- In the `destroy` method, add:
+
+```
+@post.destroy
+```
+
+**NOTE**: notice that we don't need to render anything in the `destroy` method, as the Post instance is already deleted
+
+- (OPTIONAL) write tests for the CRUD methods in the `posts_controller_spec.rb` file
+
+### 7. Test the API endpoints (Manually)
+
+Using a third party app called [Postman](https://www.postman.com/), we can test the API endpoints we just created.
+
+- Open Postman and create a new request
+- Set the request method to `GET` and the URL to `localhost:3000/api/v1/posts`
+- Click `Send` and you should see a list of all the posts in the database
+- Do the same for the other request methods, `POST`, `PATCH/PUT` and `DELETE` with the appropriate URLs and HTTP request methods
+
+This is an important step to test the API endpoints before we move on to the ReactTS app.
+
+### 7a. Adding custom endpoints
+
+We can also add custom endpoints to the `posts_controller.rb` file.
+
+For example, we can add a `search` endpoint that will search for posts with a specific title.
+
+- In the `posts_controller.rb` file, add:
+
+```
+def search
+  @posts = Post.where('title LIKE ?', '%\#{params[:title]}%')
+  render json: @posts
+end
+```
+
+- In the `routes.rb` file, add to the `:v1` block:
+
+```
+get '/search', to: 'posts#search'
+```
+
+- (OPTIONAL) write tests for the `search` method in the `posts_controller_spec.rb` file
+
+**NOTE**: in the case of a Search endpoint, you may want to use a gem called [pg_search](https://github.com/Casecommons/pg_search) to improve the search functionality
+
+# Checkpoint 1 - Rails API
+
+At this point, you should have:
+
+- A Rails API app with a Post model, controller and routes
+- CRUD methods for the Post model
+- Seed data in the database
+- (Optional) tests for the CRUD methods
+- (Optional) a custom Search endpoint
+
+Additionally, after manually testing the endpoints, you should be able to see the JSON response in Postman.

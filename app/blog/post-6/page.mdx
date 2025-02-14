@@ -1,0 +1,119 @@
+# How to get started with GitHub Actions
+
+Using GitHub actions in my personal projects has changed how think about CI/CD completely. Before, I thought of CI/CD as another 'chore', or something that DevOps engineers do. Sometimes, there can be a disconnect between developers and DevOps engineers, and I think that's because developers don't always understand the value of CI/CD. I know I didn't.
+
+Now, after giving CI/CD more time - with GitHub Actions in particular - I can see the benefits. I can also see how CI/CD is everyone's concern in a development team - as important as writing tests and documentation.
+
+But how do you get started? I've written this guide to help you get started with GitHub Actions. I'll show you how to create a simple workflow, and then I'll show you how to use GitHub Actions to deploy a static website to GitHub Pages.
+
+## What is/are GitHub Actions?
+
+GitHub Actions is a CI/CD tool built into GitHub. It's free for public repositories, and it's free for private repositories with up to 2000 minutes of build time per month. It's also very easy to use.
+
+A workflow is a set of instructions that GitHub Actions will follow. You can create a workflow by creating a file in the `.github/workflows` directory of your repository. The file must be a YAML file, and it must have a `.yml` or `.yaml` extension. Or, you can create a workflow using the GitHub Actions UI in the Actions tab of your repository.
+
+Workflows can be used to do a number of things. But in its simplest form, a workflow can be used to run a test suite on every push to a branch and prevent failing code from being merged into the branch, for example.
+
+Here's an example of a workflow that runs a JavaScript test suite on every push to a `testing` branch:
+
+```yaml
+name: Run tests # The name of the workflow
+
+# When should this workflow run? -> on > push > branches > testing
+on:
+  push:
+    branches:
+      - testing # Run this workflow on every push to the testing branch
+
+# What should this workflow do?
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v2
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+      # Run tests
+      - name: Run tests
+        run: npm test
+        # important one here: if tests fail, fail the workflow
+        continue-on-error: false
+```
+
+## How do I create a workflow?
+
+I'll go over the simplest way of creating a workflow, which is using the GitHub Actions UI in the Actions tab of your repository.
+
+1. Go to the Actions tab of your repository
+2. Click the 'New workflow' button
+3. Select a workflow template
+4. Edit the workflow
+5. Commit the workflow
+
+Voila! You've created a workflow.
+
+Deciding what to put in your workflow is the harder part and you would need to give this some thought. Running tests is one thing, but do you want to run any other actions? e.g. linters or more complex actions like creating pull requests or deploying your application?
+
+## How do I use GitHub Actions to deploy a static website to GitHub Pages?
+
+I'll show you how to use GitHub Actions to deploy a static website to GitHub Pages. This is a good example of how you can use GitHub Actions to deploy your application.
+
+### Step 1: Create a workflow
+
+Follow the steps above but be sure to include the following in your workflow:
+
+```yaml
+name: Deploy website # The name of the workflow
+
+on:
+  push:
+    branches:
+      - main # Run this workflow on every push to the main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Build the website
+        run: npm run build # or other build actions
+
+      - name: Deploy the website
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          folder: build # The folder that contains the website
+```
+
+Change the `on` step to whatever branch you want to trigger automatic deployments from. In this example, I'm using the `main` branch.
+
+Also consider the build actions you need to run - this is specific for a JavaScript/Node project. You will have different build commands. Think about the commands you run locally when you run your application.
+
+> Something I found confusing when I was learning about GitHub Actions is that custom `uses` commands are managed and maintained by individuals/groups and not GitHub. So, in this example, the `uses` command is maintained by a user named JamesIves. You can find more information about this command [here](https://github.com/JamesIves/github-pages-deploy-action)
+
+### Step 2: Create a `gh-pages` branch
+
+GitHub Pages will deploy your website to a branch called `gh-pages`. So, you need to create this branch. You can do this by running the following commands in your terminal:
+
+```bash
+git checkout -b gh-pages
+git push origin gh-pages
+```
+
+### Step 3: Enable GitHub Pages
+
+Go to the Settings tab of your repository and scroll down to the GitHub Pages section. Select the `gh-pages` branch as the source and click the 'Save' button.
+
+### Step 4: Commit your changes
+
+Commit your changes and push them to the `main` branch. This will trigger the workflow you created in step 1. You can check the status of the workflow in the Actions tab of your repository.
+
+# Conclusion
+
+It's easy to get started with GitHub Actions. My learning journey with CI/CD has only just started and already I feel it gives me peace of mind as a developer. I know my code is running tests and there are checks in place. GitHub Actions also takes the pain out of deploying my applications.
+
+My next challenge with GitHub actions will be something more complex, like automatically creating PRs when pushing to a pre-prod branch and adding reviewers. Loads more to learn!
