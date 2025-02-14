@@ -17,45 +17,22 @@ import {
 
 import { cn } from "@/lib/utils";
 
-const blogPosts = [
-  {
-    title: "Part 1: How to Build a Ruby on Rails and ReactTS App",
-    href: "/blog/post-1",
-    description: "Building the Rails app.",
-  },
-  {
-    title: "Part 2: How to Build a Ruby on Rails and ReactTS App",
-    href: "/blog/post-2",
-    description: "Building the ReactTS app.",
-  },
-  {
-    title: "Part 3: How to Build a Ruby on Rails and ReactTS App",
-    href: "/blog/post-3",
-    description: "Setting up the API.",
-  },
-  { title: "All posts", href: "/blog", description: "All blog posts." },
-];
+import { Blog } from "@/types/shared";
+import { fetchBlogs } from "@/lib/blogs";
 
-const portfolioItems = [
+const blogData = await fetchBlogs();
+
+const blogItems: Blog[] = [
+  ...blogData.slice(-3),
   {
-    title: "Project 1",
-    href: "/projects/project-1",
-    description: "A project.",
-  },
-  {
-    title: "Project 2",
-    href: "/projects/project-2",
-    description: "Another project.",
-  },
-  {
-    title: "Project 3",
-    href: "/projects/project-3",
-    description: "Yet another project.",
-  },
-  {
-    title: "All projects",
-    href: "/projects",
-    description: "All portfolio items.",
+    id: 0,
+    title: "All Blog Posts",
+    slug: "blog",
+    image: "",
+    description: "View all blog posts",
+    status: "published",
+    category: [],
+    created_at: "",
   },
 ];
 
@@ -77,11 +54,11 @@ export default function Navigation() {
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[200px] gap-3 p-4">
-                {blogPosts.map((post) => (
+                {blogItems.map((post) => (
                   <ListItem
                     key={post.title}
                     title={post.title}
-                    href={post.href}
+                    href={`/blog/${post.slug}`}
                   >
                     {post.description}
                   </ListItem>
@@ -90,22 +67,13 @@ export default function Navigation() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="m750:max-w-[80px] m750:text-xs">
-              Projects
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[200px] gap-3 p-4">
-                {portfolioItems.map((item) => (
-                  <ListItem
-                    key={item.title}
-                    title={item.title}
-                    href={item.href}
-                  >
-                    {item.description}
-                  </ListItem>
-                ))}
-              </ul>
-            </NavigationMenuContent>
+          <Link href="/projects" legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <span className="m750:max-w-[80px] m750:text-xs">
+                Projects
+              </span>
+            </NavigationMenuLink>
+          </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
