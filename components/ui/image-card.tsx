@@ -25,9 +25,11 @@ export default function ImageCard({
       />
       <figcaption className="border-t-2 text-mtext border-border p-4 mt-0 flex flex-col gap-2">
         <div>{caption}</div>
-        <Link href={link} passHref className="text-text hover:text-main underline">
-          Repo
-        </Link>
+        <div>
+          <Link href={link} passHref className="text-text hover:text-main underline">
+            Repo
+          </Link>
+        </div>
         <small>
           {new Date(created_at).toLocaleDateString("en-US", {
             year: "numeric",
