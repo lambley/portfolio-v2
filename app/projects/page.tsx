@@ -1,9 +1,33 @@
+"use client";
+import { useState, useEffect } from "react";
 import type { Project } from "@/types/shared";
 import { fetchProjects } from "@/lib/projects";
 import ImageCard from "@/components/ui/image-card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
-export default async function Projects() {
-  const projects: Project[] = await fetchProjects();
+export default function Projects() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isSortedByNewest, setIsSortedByNewest] = useState(true);
+
+  useEffect(() => {
+    async function getProjects() {
+      const fetchedProjects = await fetchProjects();
+      setProjects(fetchedProjects);
+    }
+    getProjects();
+  }, []);
+
+  const handleToggle = (checked: boolean) => {
+    setIsSortedByNewest(checked);
+  };
+
+  const sortedProjects = isSortedByNewest
+    ? [...projects].sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
+    : projects;
 
   const projectCard = (project: Project) => (
     <ImageCard
@@ -16,20 +40,34 @@ export default async function Projects() {
   );
 
   const renderProjects = () => (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      {projects.map(projectCard)}
-    </div>
+    <>
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="sort-by-newest"
+          checked={isSortedByNewest}
+          onChange={handleToggle}
+        />
+        <Label htmlFor="sort-by-newest">
+          {isSortedByNewest ? "Latest" : "Oldest"}
+        </Label>
+      </div>
+      <ul className="mt-4 list-disc">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {sortedProjects.map(projectCard)}
+        </div>
+      </ul>
+    </>
   );
 
   return (
     <main className="w-full p-4 flex flex-col items-center justify-center bg-main text-text">
       <h1 className="text-4xl font-bold">Projects</h1>
-      <p className="mt-4">
+      <p className="my-4">
         Projects I have worked on for learning purposes and for fun. Some go way
-        back to my early days of learning web development - so try not to judge too
-        harshly!
+        back to my early days of learning web development - so try not to judge
+        too harshly!
       </p>
-      <ul className="mt-4 list-disc">{renderProjects()}</ul>
+      {renderProjects()}
     </main>
   );
 }
