@@ -17,7 +17,7 @@ export default function ImageCard({
   return (
     <figure className="w-[250px] overflow-hidden rounded-base border-2 border-border bg-bg font-base shadow-shadow">
       <Image
-        className="w-full aspect-[4/3]"
+        className="w-full aspect-[4/3] object-cover"
         src={imageUrl}
         width={500}
         height={375}
