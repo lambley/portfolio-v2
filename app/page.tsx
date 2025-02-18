@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -6,13 +7,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import ContactForm from "@/components/contactForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
 
 export default function HomePage() {
   return (
     <main className="md:h-[calc(100vh-96px)] w-full m-auto p-4 flex flex-col items-center justify-center bg-main text-text">
-      <Card className="bg-bg w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
+      <Card className="bg-bg w-full md:w-3/4 lg:w-1/2 xl:w-1/3 mb-4">
         <CardHeader className="flex items-center justify-center">
           <CardTitle>Aaron Lambley</CardTitle>
           <CardDescription>
@@ -50,6 +52,18 @@ export default function HomePage() {
               Currently working at <Link href="https://www.solirius.com/" className="text-text hover:text-main underline">Solirius Consulting</Link>.
             </div>
           </section>
+        </CardContent>
+      </Card>
+      <Card className="bg-bg w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
+        <CardHeader className="flex items-center justify-center">
+          <CardTitle>Contact Me</CardTitle>
+          <CardDescription>
+            If you have any questions or would like to get in touch, please fill
+            out the form below.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ContactForm />
         </CardContent>
       </Card>
     </main>
