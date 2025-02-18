@@ -1,12 +1,51 @@
 import type { Metadata } from "next";
-import Head from "next/head";
 import "./globals.css";
 import Navigation from "@/components/navigation";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
+import ogImage from "@/public/images/ogimage.png";
 
 export const metadata: Metadata = {
   title: "Aaron Lambley - Fullstack Developer - Ruby, JS/TS, Python",
   description: "Aaron Lambley - Fullstack Developer",
+  metadataBase: new URL("https://www.agslambley.dev/"),
+  icons: [
+    {
+      url: "/favicon.ico",
+      type: "image/x-icon",
+    },
+    {
+      url: "/favicon-16x16.png",
+      type: "image/png",
+    },
+    {
+      url: "/favicon-32x32.png",
+      type: "image/png",
+    },
+  ],
+  openGraph: {
+    type: "website",
+    url: "https://www.agslambley.dev/",
+    title: "Aaron Lambley - Fullstack Developer - Ruby, JS/TS, Python",
+    description: "Aaron Lambley - Fullstack Developer",
+    images: [
+      {
+        url: ogImage.src,
+        width: 1200,
+        height: 630,
+        alt: "Aaron Lambley - Fullstack Developer - Ruby, JS/TS, Python",
+      },
+    ],
+  },
+  twitter: {
+    images: [
+      {
+        url: ogImage.src,
+        width: 1200,
+        height: 630,
+        alt: "Aaron Lambley - Fullstack Developer - Ruby, JS/TS, Python",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -16,34 +55,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <meta
-          property="og:title"
-          content="Aaron Lambley - Fullstack Developer - Ruby, JS/TS, Python"
-        />
-        <meta
-          property="og:description"
-          content="Aaron Lambley - Fullstack Developer - Ruby, JS/TS, Python"
-        />
-        <meta property="og:image" content="/images/ogimage.png" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:url" content="https://www.agslambley.dev/" />
-        <meta property="og:type" content="website" />
-        <link rel="icon" href="/favicon.ico" />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-      </Head>
       <body className="w-11/12 m-auto bg-main text-text">
         <Navigation />
         {children}
