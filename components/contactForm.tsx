@@ -61,15 +61,12 @@ export default function ContactForm() {
       );
 
       if (response.ok) {
-        console.info("Email sent successfully");
         setFeedback("Email sent successfully!");
         setIsSubmitted(true);
       } else {
-        console.error("Failed to send email", response);
         setFeedback("Failed to send email. Please try again later.");
       }
-    } catch (error) {
-      console.error("Failed to send email", error);
+    } catch {
       setFeedback("Failed to send email. Please try again later.");
     } finally {
       setIsSubmitting(false);
