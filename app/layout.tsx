@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Head from "next/head";
 import "./globals.css";
 import Navigation from "@/components/navigation";
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "Aaron Lambley - Fullstack Developer - Ruby, JS/TS, Python",
@@ -46,6 +47,7 @@ export default function RootLayout({
       <body className="w-11/12 m-auto bg-main text-text">
         <Navigation />
         {children}
+        <Analytics />
       </body>
     </html>
   );
