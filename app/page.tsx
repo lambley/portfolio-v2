@@ -14,7 +14,7 @@ import { faFile } from "@fortawesome/free-solid-svg-icons";
 export default function HomePage() {
   return (
     <main className="w-full m-auto p-4 flex flex-col items-center justify-center bg-main text-text">
-      <Card className="bg-bg w-full md:w-3/4 mb-4">
+      <Card className="bg-bg w-full md:w-3/4 xl:w-1/2 mb-4">
         <CardHeader className="flex items-center justify-center">
           <CardTitle>Aaron Lambley</CardTitle>
           <CardDescription>
@@ -49,12 +49,19 @@ export default function HomePage() {
               analytics.
             </div>
             <div className="mb-4">
-              Currently working at <Link href="https://www.solirius.com/" className="text-text hover:text-main underline">Solirius Consulting</Link>.
+              Currently working at{" "}
+              <Link
+                href="https://www.solirius.com/"
+                className="text-text hover:text-main underline"
+              >
+                Solirius Consulting
+              </Link>
+              .
             </div>
           </section>
         </CardContent>
       </Card>
-      <Card className="bg-bg w-full md:w-3/4 mb-4">
+      <Card className="bg-bg w-full md:w-3/4 xl:w-1/2 mb-4">
         <CardHeader className="flex items-center justify-center">
           <CardTitle>Contact Me</CardTitle>
           <CardDescription>
