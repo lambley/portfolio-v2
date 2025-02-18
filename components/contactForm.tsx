@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,16 +21,21 @@ const formSchema = z.object({
   message: z.string().min(1, {
     message: "Message is required.",
   }),
-  email: z.string().email({
-    message: "Invalid email address.",
-  }),
+  email: z
+    .string()
+    .min(1, {
+      message: "Email is required.",
+    })
+    .email({
+      message: "Invalid email address.",
+    }),
 });
 
-function onSubmit(values: z.infer<typeof formSchema>) {
-  console.log(values);
-}
-
 export default function ContactForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,6 +43,35 @@ export default function ContactForm() {
       email: "",
     },
   });
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsSubmitting(true);
+    setFeedback(null);
+
+    try {
+      const response = await fetch(
+        `https://formspree.io/f/${process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
+
+      if (response.ok) {
+        setFeedback("Email sent successfully!");
+        setIsSubmitted(true);
+      } else {
+        setFeedback("Failed to send email. Please try again later.");
+      }
+    } catch (error) {
+      setFeedback("Failed to send email. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -65,7 +100,7 @@ export default function ContactForm() {
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
-                  type="email"
+                  type="text"
                   placeholder="your-email@example.com"
                   {...field}
                 />
@@ -74,7 +109,10 @@ export default function ContactForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={isSubmitting || isSubmitted}>
+          {isSubmitting ? "Sending..." : isSubmitted ? "Sent" : "Submit"}
+        </Button>
+        {feedback && <p>{feedback}</p>}
       </form>
     </Form>
   );
