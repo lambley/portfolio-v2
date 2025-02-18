@@ -47,7 +47,7 @@ export default function HomePage() {
               analytics.
             </div>
             <div className="mb-4">
-              Currently learning NestJS framework and using Redis and Docker.
+              Currently working at <Link href="https://www.solirius.com/" className="text-text hover:text-main underline">Solirius Consulting</Link>.
             </div>
           </section>
         </CardContent>
