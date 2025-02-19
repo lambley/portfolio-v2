@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import type { Blog } from "@/types/shared";
 import { fetchBlogs } from "@/lib/blogs";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import SortButton from "@/components/sortButton";
+import { faArrowUp91, faArrowUp19 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Blog() {
   const [posts, setPosts] = useState<Blog[]>([]);
@@ -40,14 +40,12 @@ export default function Blog() {
         journey.
       </p>
       <div className="flex items-center space-x-2">
-        <Switch
-          id="sort-by-newest"
-          checked={isSortedByNewest}
+        <SortButton
           onChange={handleToggle}
+          sortState={isSortedByNewest}
+          activeIcon={faArrowUp19}
+          inactiveIcon={faArrowUp91}
         />
-        <Label htmlFor="sort-by-newest">
-          {isSortedByNewest ? "Latest" : "Oldest"}
-        </Label>
       </div>
       <ul className="mt-4 list-disc">
         {sortedPosts.map((post) => (

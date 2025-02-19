@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import type { Project } from "@/types/shared";
 import { fetchProjects } from "@/lib/projects";
 import ImageCard from "@/components/ui/image-card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import SortButton from "@/components/sortButton";
+import { faArrowUp91, faArrowUp19 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -42,14 +42,12 @@ export default function Projects() {
   const renderProjects = () => (
     <>
       <div className="flex items-center space-x-2">
-        <Switch
-          id="sort-by-newest"
-          checked={isSortedByNewest}
+        <SortButton
           onChange={handleToggle}
+          sortState={isSortedByNewest}
+          activeIcon={faArrowUp19}
+          inactiveIcon={faArrowUp91}
         />
-        <Label htmlFor="sort-by-newest">
-          {isSortedByNewest ? "Latest" : "Oldest"}
-        </Label>
       </div>
       <ul className="mt-4 list-disc">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
