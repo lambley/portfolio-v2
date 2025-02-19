@@ -1,0 +1,156 @@
+# Markdown & NextJS - A Quick guide
+
+## Why Markdown?
+
+For me, Markdown is the a developer's best friend when it comes to creating and managing content. It's a lightweight markup language that's easy to read and write. It's also easy to convert to HTML, which makes it perfect for creating content for the web.
+
+Once you learn the syntax, you can write content quickly and easily, particularly in code editors.
+[Github's docs](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) are a good place to start, if you want to learn more about the syntax.
+
+I use Markdown on this very site for managing content. No database required. All you need to do is use NextJS's `@next/mdx` package and a set of markdown files. Hey presto, you have a blog!
+
+## Using NextJS and @next/mdx
+
+First and foremost, I'm assuming you have a NextJS project set up. If not, you can follow the [NextJS docs](https://nextjs.org/docs/getting-started) to get started.
+
+Once you have something up and running, install the `@next/mdx` package and dependencies:
+
+```bash
+npm install @next/mdx @mdx-js/loader @mdx-js/react @types/mdx
+```
+
+You will need to configure a few things in your `next.config.js` file:
+
+```javascript
+// next.config.js
+import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
+
+const nextConfig: NextConfig = {
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+};
+
+const withMDX = createMDX({
+  // Add markdown plugins here, as desired
+});
+
+// Merge MDX config with Next.js config
+export default withMDX(nextConfig);
+```
+
+You also need to create `mdx-components.tsx` in your root folder with the following skeleton. This file will be relevant for styling your markdown - more about that in the next section.
+
+```tsx
+// mdx-components.tsx
+import type { MDXComponents } from 'mdx/types'
+
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+  return {
+    ...components,
+  }
+}
+```
+
+With these packages and files setup, you're ready to start creating markdown files in your project.
+
+For me, I chose to create a `blog` folder in my `app` directory. This is where I store all my markdown files. There are other patterns you can follow, like creating a `markdown` folder in your root directory, or setting up a remote CMS to manage your content. For the purposes of this guide, I'll stick to the `blog` folder and assume you're fine co-locating your markdown files with your code. The official NextJS docs have a good guide on how to set up a remote CMS, if you're interested.
+
+> Read more about `@next/mdx` [here](https://nextjs.org/docs/pages/building-your-application/configuring/mdx).
+
+## Styling with TailwindCSS
+
+For my blog, I use TailwindCSS for styling. It's easy to use and there are loads of guides out there. But you'll find that without additional configuration, your markdown content will not be styled with TailwindCSS. You have two (simple) options to address this:
+1. Use the `mdx-components.tsx` file to style your markdown content.
+2. Use the `@tailwindcss/typography` plugin.
+
+### Option 1: Styling with `mdx-components.tsx`
+
+This is not what I opted for, but can work for an SPA or a small project. You can use the `mdx-components.tsx` file to style your markdown content. Here's an example:
+
+```tsx
+import type { MDXComponents } from 'mdx/types'
+
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+  return {
+    // add element styles here
+    h1: (props) => <h1 className="text-4xl font-bold">{props.children}</h1>,
+    h2: (props) => <h2 className="text-3xl font-bold">{props.children}</h2>,
+    ...components,
+  }
+}
+
+```
+
+If you take this approach, you might end up with duplicated styling. This is especially an issue if you use CSS variables or TailwindCSS's JIT mode. You can avoid this by using the `@tailwindcss/typography` plugin.
+
+### Option 2: Styling with `@tailwindcss/typography`
+
+This is the approach I took. The `@tailwindcss/typography` plugin is a great way to style your markdown content with TailwindCSS. It's easy to set up and you can customise the styles to suit your needs.
+
+First, install the plugin:
+
+```bash
+# this is a dev dependency - handy for not polluting your production build
+npm install -D @tailwindcss/typography
+```
+
+You then either need to add the plugin to your `tailwind.config.js` file or your `postcss.config.js` file. I prefer the former, as it keeps all my TailwindCSS configuration in one place.
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
+}
+```
+
+With the plugin installed and configured, you can now use the `prose` class. In the latest version of NextJS, if you've opted for a similar structure to this site, you can add a `layout.tsx` file to your `blog` folder. This file will be used to style your markdown content. The `prose` class will be applied to the `div` element in this file, and child elements from the markdown files.
+
+```tsx
+// app/blog/layout.tsx
+export default function MdxLayout({ children }: { children: React.ReactNode }) {
+  return <div className="prose max-w-none my-16">{children}</div>;
+}
+
+```
+
+Simple as that! If you need to do custom styling, you can add classes to the `prose` class in your `tailwind.config.js` file. Here's an example:
+
+```javascript
+// tailwind.config.js
+
+export default {
+  theme: {
+    // ... other theme settings
+    // this block is for customising the typography plugin - note the TS type
+    typography: (theme: (arg0: string) => any) => ({
+      DEFAULT: {
+        css: {
+          // add custom styles here
+          h1: {
+            color: theme('colors.gray.900'),
+            fontWeight: theme('fontWeight.bold'),
+            fontSize: theme('fontSize.4xl'),
+          },
+          h2: {
+            color: theme('colors.gray.900'),
+            fontWeight: theme('fontWeight.bold'),
+            fontSize: theme('fontSize.3xl'),
+          },
+        },
+      },
+    }),
+  }
+}
+```
+
+> Read more about the `@tailwindcss/typography` plugin [here](https://github.com/tailwindlabs/tailwindcss-typography).
+
+## Further Reading
+
+- [NextJS docs](https://nextjs.org/docs/getting-started)
+- [Github's Markdown guide](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+- [TailwindCSS docs](https://tailwindcss.com/docs)
+- [TailwindCSS Typography plugin](https://github.com/tailwindlabs/tailwindcss-typography)
+- [@next/mdx docs](https://nextjs.org/docs/pages/building-your-application/configuring/mdx)

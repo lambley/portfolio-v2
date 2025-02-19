@@ -13,7 +13,10 @@ export default function Blog() {
   useEffect(() => {
     async function getBlogs() {
       const fetchedBlogs = await fetchBlogs();
-      setPosts(fetchedBlogs);
+      const publishedBlogs = fetchedBlogs.filter(
+        (blog) => blog.status === "published"
+      );
+      setPosts(publishedBlogs);
     }
     getBlogs();
   }, []);

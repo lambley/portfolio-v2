@@ -1,4 +1,5 @@
 import { Blog } from "@/types/shared";
+import { BlogStatus, Categories } from "@/types/enums";
 
 export async function fetchBlogs() {
   const posts: Blog[] = [
@@ -9,8 +10,12 @@ export async function fetchBlogs() {
       image: "rails-ts-blog-1",
       description:
         "How to create a Ruby on Rails API only backend for use with a JS frontend framework",
-      status: "published",
-      category: ["Ruby on Rails", "Backend"],
+      status: BlogStatus.PUBLISHED,
+      category: [
+        Categories.RUBY_ON_RAILS,
+        Categories.REACT,
+        Categories.FRONTEND,
+      ],
       created_at: "2023-08-7",
     },
     {
@@ -20,8 +25,12 @@ export async function fetchBlogs() {
       image: "rails-ts-blog-2",
       description:
         "Creating a ReactTS app with a Post component for a Ruby on Rails API",
-      status: "published",
-      category: ["React", "Frontend"],
+      status: BlogStatus.PUBLISHED,
+      category: [
+        Categories.RUBY_ON_RAILS,
+        Categories.REACT,
+        Categories.FRONTEND,
+      ],
       created_at: "2023-08-14",
     },
     {
@@ -31,8 +40,12 @@ export async function fetchBlogs() {
       image: "rails-ts-blog-3",
       description:
         "Updating your ReactTS frontend to handle Create and Edit functionality",
-      status: "published",
-      category: ["React", "Frontend"],
+      status: BlogStatus.PUBLISHED,
+      category: [
+        Categories.RUBY_ON_RAILS,
+        Categories.REACT,
+        Categories.FRONTEND,
+      ],
       created_at: "2023-08-21",
     },
     {
@@ -42,8 +55,12 @@ export async function fetchBlogs() {
       image: "rails-ts-blog-4",
       description:
         "Adding the final CRUD action - Delete - to your ReactTS frontend and a note about authentication",
-      status: "published",
-      category: ["React", "Frontend"],
+      status: BlogStatus.PUBLISHED,
+      category: [
+        Categories.RUBY_ON_RAILS,
+        Categories.REACT,
+        Categories.FRONTEND,
+      ],
       created_at: "2023-08-28",
     },
     {
@@ -53,8 +70,12 @@ export async function fetchBlogs() {
       image: "setup-recaptcha",
       description:
         "A quick guide to setting up reCAPTCHA v2 in a Rails and React app",
-      status: "published",
-      category: ["Ruby on Rails", "React", "Frontend"],
+      status: BlogStatus.PUBLISHED,
+      category: [
+        Categories.RUBY_ON_RAILS,
+        Categories.REACT,
+        Categories.FRONTEND,
+      ],
       created_at: "2023-09-18",
     },
     {
@@ -63,8 +84,8 @@ export async function fetchBlogs() {
       slug: "post-6",
       image: "github-actions",
       description: "A quick guide to getting started with GitHub Actions",
-      status: "published",
-      category: ["GitHub", "CI/CD"],
+      status: BlogStatus.PUBLISHED,
+      category: [Categories.GITHUB, Categories.CI_CD],
       created_at: "2023-09-11",
     },
     {
@@ -74,8 +95,8 @@ export async function fetchBlogs() {
       image: "design-patterns",
       description:
         "Design Patterns I have used recently: Repository, Presenter, and Service Objects",
-      status: "published",
-      category: ["Fullstack", "Design Patterns"],
+      status: BlogStatus.PUBLISHED,
+      category: [Categories.DESIGN_PATTERNS, Categories.FULLSTACK],
       created_at: "2023-11-06",
     },
     {
@@ -85,9 +106,23 @@ export async function fetchBlogs() {
       image: "getting-started-with-testing",
       description:
         "A quick guide to getting started with testing in Ruby on Rails",
-      status: "published",
-      category: ["Ruby on Rails", "Backend", "Testing"],
+      status: BlogStatus.PUBLISHED,
+      category: [
+        Categories.RUBY_ON_RAILS,
+        Categories.TESTING,
+        Categories.BACKEND,
+      ],
       created_at: "2024-01-18",
+    },
+    {
+      id: 9,
+      title: "Markdown & NextJS - a quick guide",
+      slug: "post-9",
+      image: "markdown-nextjs",
+      description: "A quick guide to using Markdown in a NextJS app",
+      status: BlogStatus.PUBLISHED,
+      category: [Categories.FRONTEND, Categories.NEXTJS, Categories.FULLSTACK],
+      created_at: "2025-2-21",
     },
   ];
   return posts;
