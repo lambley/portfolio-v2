@@ -41,7 +41,7 @@ export async function fetchProjects() {
       title: "Portfolio V1",
       slug: "project-4",
       description: "My portfolio website - version 1",
-      url: "https://www.agslambley.dev/",
+      url: "https://portfolio-three-tau-95.vercel.app/",
       repo_url: "https://github.com/lambley/portfolio",
       image: "portfolio",
       category: ["Nextjs", "React", "Ruby on Rails", "Prisma ORM", "Fullstack"],
