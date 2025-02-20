@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 type SortButtonProps = {
   onChange: (checked: boolean) => void;
@@ -19,11 +20,14 @@ export default function SortButton({
   return (
     <>
       <Button
-        className={sortState ? "bg-active text-text" : "bg-bg text-text"}
+        className={cn(
+          "cursor-pointer",
+          sortState ? "bg-active text-text" : "bg-bg text-text"
+        )}
         onClick={() => onChange(!sortState)}
       >
         <FontAwesomeIcon icon={sortState ? activeIcon : inactiveIcon} />
-        <Label htmlFor="sort-by-newest">
+        <Label htmlFor="sort-by-newest" className="cursor-pointer">
           {sortState ? "Latest" : "Oldest"}
         </Label>
       </Button>
