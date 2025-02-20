@@ -23,7 +23,7 @@ import { fetchBlogs } from "@/lib/blogs";
 const blogData = await fetchBlogs();
 
 const blogItems: Blog[] = [
-  ...blogData.slice(-3),
+  ...blogData.slice(-3).reverse(),
   {
     id: 0,
     title: "All Blog Posts",
