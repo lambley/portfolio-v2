@@ -16,23 +16,23 @@ export default function HomePage() {
     <main className="w-full m-auto p-4 flex flex-col items-center justify-center bg-main text-text">
       <Card className="bg-bg w-full md:w-3/4 xl:w-1/2 mb-4">
         <CardHeader className="flex items-center justify-center">
-          <CardTitle>Aaron Lambley</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl">Aaron Lambley</CardTitle>
+          <CardDescription className="text-lg">
             Fullstack Developer 💻 | Web-Dev Enthusiast 🌐 | Bookworm 📚 | Dog
             Lover 🐶
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="text-xl">
           <div className="flex justify-center mb-4">
             <Button variant="default" size="default">
-              <a
+              <Link
                 href="https://drive.google.com/file/d/15az5jAl01qd-3bCD3o2CqrL090N0n7gR/view?usp=sharing"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-2"
               >
                 View my CV <FontAwesomeIcon icon={faFile} />
-              </a>
+              </Link>
             </Button>
           </div>
           <section>
@@ -63,8 +63,8 @@ export default function HomePage() {
       </Card>
       <Card className="bg-bg w-full md:w-3/4 xl:w-1/2 mb-4">
         <CardHeader className="flex items-center justify-center">
-          <CardTitle>Contact Me</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl">Contact Me</CardTitle>
+          <CardDescription className="text-lg">
             If you have any questions or would like to get in touch, please fill
             out the form below.
           </CardDescription>
