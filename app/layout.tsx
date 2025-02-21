@@ -7,7 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import ogImage from "@/public/images/ogimage.png";
 import { cn } from "@/lib/utils";
 
-const mainFont = DM_Sans();
+const mainFont = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Aaron Lambley - Fullstack Developer - Ruby, JS/TS, Python",
