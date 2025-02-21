@@ -22,6 +22,7 @@ export default function ImageCard({
         width={500}
         height={375}
         alt="image"
+        priority
       />
       <figcaption className="border-t-2 text-mtext border-border p-4 mt-0 flex flex-col gap-2">
         <div>{caption}</div>
