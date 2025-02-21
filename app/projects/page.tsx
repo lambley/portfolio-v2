@@ -1,10 +1,16 @@
 "use client";
+
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from "react";
 import type { Project } from "@/types/shared";
 import { fetchProjects } from "@/lib/projects";
-import ImageCard from "@/components/ui/image-card";
 import SortButton from "@/components/sortButton";
 import { faArrowUp91, faArrowUp19 } from "@fortawesome/free-solid-svg-icons";
+import SkeletonCard from '@/components/skeletonCard';
+
+const DynamicImageCard = dynamic(() => import('@/components/ui/image-card'), {
+  loading: () => <SkeletonCard />,
+});
 
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -30,13 +36,13 @@ export default function Projects() {
     : projects;
 
   const projectCard = (project: Project) => (
-    <ImageCard
+    <DynamicImageCard
       caption={project.title}
       imageUrl={`/images/projects/${project.image}.png`}
       link={project.repo_url}
       created_at={project.created_at}
       key={project.id}
-    ></ImageCard>
+    ></DynamicImageCard>
   );
 
   const renderProjects = () => (
