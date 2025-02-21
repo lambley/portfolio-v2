@@ -16,3 +16,10 @@ Local development will be available at `http://localhost:3000`.
 ## Deployment
 
 This project is deployed to Vercel. Any changes pushed to the `main` branch will be automatically deployed.
+
+## About the app
+
+The site is a mix of client and server side rendering:
+- The main page is statically generated
+- The blog posts are server side rendered
+- The projects page is client side rendered
