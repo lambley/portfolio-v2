@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/navigation";
 import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import ogImage from "@/public/images/ogimage.png";
+import { cn } from "@/lib/utils";
+
+const mainFont = DM_Sans();
 
 export const metadata: Metadata = {
   title: "Aaron Lambley - Fullstack Developer - Ruby, JS/TS, Python",
@@ -56,7 +60,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="w-11/12 m-auto bg-main text-text">
+      <body
+        className={cn("w-11/12 m-auto bg-main text-text", mainFont.className)}
+      >
         <Navigation />
         {children}
         <Analytics />
