@@ -1,14 +1,14 @@
 "use client";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import type { Project } from "@/types/shared";
 import { fetchProjects } from "@/lib/projects";
 import SortButton from "@/components/sortButton";
 import { faArrowUp91, faArrowUp19 } from "@fortawesome/free-solid-svg-icons";
-import SkeletonCard from '@/components/skeletonCard';
+import SkeletonCard from "@/components/skeletonCard";
 
-const DynamicImageCard = dynamic(() => import('@/components/ui/image-card'), {
+const DynamicImageCard = dynamic(() => import("@/components/ui/image-card"), {
   loading: () => <SkeletonCard />,
 });
 
@@ -29,10 +29,7 @@ export default function Projects() {
   };
 
   const sortedProjects = isSortedByNewest
-    ? [...projects].sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      )
+    ? [...projects].sort((a, b) => b.id - a.id)
     : projects;
 
   const projectCard = (project: Project) => (

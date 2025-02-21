@@ -97,17 +97,6 @@ export async function fetchProjects() {
     },
     {
       id: 9,
-      title: "Portfolio V2",
-      slug: "project-9",
-      description: "My portfolio website - Version 2",
-      url: "https://www.agslambley.dev/",
-      repo_url: "https://github.com/lambley/portfolio-v2",
-      image: "portfolio-v2",
-      category: ["Nextjs", "Markdown", "Fullstack"],
-      created_at: "2025-2-14",
-    },
-    {
-      id: 10,
       title: "Rails 8 Subscription Manager",
       slug: "project-10",
       description:
@@ -117,6 +106,17 @@ export async function fetchProjects() {
       image: "rails-8-subscription-manager",
       category: ["Ruby on Rails", "Fullstack"],
       created_at: "2025-1-15",
+    },
+    {
+      id: 10,
+      title: "Portfolio V2",
+      slug: "project-9",
+      description: "My portfolio website - Version 2",
+      url: "https://www.agslambley.dev/",
+      repo_url: "https://github.com/lambley/portfolio-v2",
+      image: "portfolio-v2",
+      category: ["Nextjs", "Markdown", "Fullstack"],
+      created_at: "2025-2-14",
     },
   ];
 
