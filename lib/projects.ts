@@ -120,5 +120,16 @@ export async function fetchProjects() {
     },
   ];
 
-  return projects;
+  const projectsWithLocaleDateStringFormatting = projects.map((project) => {
+    return {
+      ...project,
+      created_at: new Date(project.created_at).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+    };
+  });
+
+  return projectsWithLocaleDateStringFormatting;
 }

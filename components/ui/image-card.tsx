@@ -35,13 +35,7 @@ export default function ImageCard({
             Repo
           </Link>
         </div>
-        <small>
-          {new Date(created_at).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }) || "No date"}
-        </small>
+        <small>{created_at || "No date"}</small>
       </figcaption>
     </figure>
   );
