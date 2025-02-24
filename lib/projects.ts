@@ -93,7 +93,7 @@ export async function fetchProjects() {
       repo_url: "https://github.com/lambley/tf_chat_app",
       image: "tf-chat-app",
       category: ["frontend", "react", "tensorflow.js"],
-      created_at: "2024-3-11",
+      created_at: "2024-03-11",
     },
     {
       id: 9,
@@ -105,7 +105,7 @@ export async function fetchProjects() {
       repo_url: "https://github.com/lambley/subscription-manager-r8",
       image: "rails-8-subscription-manager",
       category: ["Ruby on Rails", "Fullstack"],
-      created_at: "2025-1-15",
+      created_at: "2025-01-15",
     },
     {
       id: 10,
@@ -116,7 +116,7 @@ export async function fetchProjects() {
       repo_url: "https://github.com/lambley/portfolio-v2",
       image: "portfolio-v2",
       category: ["Nextjs", "Markdown", "Fullstack"],
-      created_at: "2025-2-14",
+      created_at: "2025-02-14",
     },
   ];
 
