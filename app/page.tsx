@@ -17,19 +17,23 @@ export default function HomePage() {
       <Card className="bg-bg w-full md:w-3/4 xl:w-1/2 mb-4">
         <CardHeader className="flex items-center justify-center">
           <CardTitle className="text-2xl">Aaron Lambley</CardTitle>
-          <CardDescription className="text-lg">
-            Fullstack Developer 💻 | Web-Dev Enthusiast 🌐 | Bookworm 📚 | Dog
-            Lover 🐶
+          <CardDescription className="text-lg text-center">
+            💻 Fullstack Developer 🌐 Web-Dev Enthusiast 📚 Bookworm 🐶 Animal
+            Lover
           </CardDescription>
         </CardHeader>
         <CardContent className="text-xl">
           <div className="flex justify-center mb-4">
-            <Button variant="default" size="default">
+            <Button
+              variant="default"
+              size="default"
+              className="w-full md:w-1/3 2xl:w-1/4 bg-active py-6 md:py-4 2xl:py-4"
+            >
               <Link
                 href="https://drive.google.com/file/d/15az5jAl01qd-3bCD3o2CqrL090N0n7gR/view?usp=sharing"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2"
+                className="flex items-center justify-center gap-2 text-xl md:text-lg"
               >
                 View my CV <FontAwesomeIcon icon={faFile} />
               </Link>

@@ -43,7 +43,10 @@ export default function Navigation() {
         <NavigationMenuList className="flex justify-between w-full">
           <NavigationMenuItem>
             <Link href="/" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink
+                className={navigationMenuTriggerStyle()}
+                aria-label="Home"
+              >
                 <FontAwesomeIcon icon={faHouse} />
               </NavigationMenuLink>
             </Link>
@@ -67,13 +70,11 @@ export default function Navigation() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-          <Link href="/projects" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              <span className="m750:max-w-[80px] m750:text-xs">
-                Projects
-              </span>
-            </NavigationMenuLink>
-          </Link>
+            <Link href="/projects" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <span className="m750:max-w-[80px] m750:text-xs">Projects</span>
+              </NavigationMenuLink>
+            </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
