@@ -78,6 +78,7 @@ export default function ContactForm() {
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8 font-bold"
+        aria-label="Contact Form"
       >
         <FormField
           control={form.control}
