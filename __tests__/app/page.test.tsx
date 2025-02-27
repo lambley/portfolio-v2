@@ -1,4 +1,3 @@
-import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import HomePage from "@/app/page";
 
@@ -20,7 +19,7 @@ describe("HomePage", () => {
       it("should render a biography card with a description", () => {
         render(<HomePage />);
         const biographyCard = screen.getByText(
-          "Fullstack Developer 💻 | Web-Dev Enthusiast 🌐 | Bookworm 📚 | Dog Lover 🐶"
+          "💻 Fullstack Developer 🌐 Web-Dev Enthusiast 📚 Bookworm 🐶 Animal Lover"
         );
         expect(biographyCard).toBeInTheDocument();
       });
