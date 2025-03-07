@@ -24,20 +24,20 @@ export default function HomePage() {
         </CardHeader>
         <CardContent className="text-xl">
           <div className="flex justify-center mb-4">
-            <Button
-              variant="default"
-              size="default"
-              className="w-full md:w-1/3 2xl:w-1/4 bg-active py-6 md:py-4 2xl:py-4"
+            <Link
+              href="https://drive.google.com/file/d/15az5jAl01qd-3bCD3o2CqrL090N0n7gR/view?usp=sharing"
+              target="_blank"
+              rel="noreferrer"
+              className="w-full md:w-1/3 2xl:w-1/4"
             >
-              <Link
-                href="https://drive.google.com/file/d/15az5jAl01qd-3bCD3o2CqrL090N0n7gR/view?usp=sharing"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-center gap-2 text-xl md:text-lg"
+              <Button
+                variant="default"
+                size="default"
+                className="w-full bg-active py-6 md:py-4 2xl:py-4"
               >
                 View my CV <FontAwesomeIcon icon={faFile} />
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </div>
           <section>
             <div className="mb-4">
