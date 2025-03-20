@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 const mainFont = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Aaron Lambley - Fullstack Developer - Ruby, JS/TS, Python",
-  description: "Aaron Lambley - Fullstack Developer",
+  title: "Aaron Lambley | Fullstack Developer - Ruby, JS/TS, Python",
+  description: "Aaron Lambley is a full-stack developer specializing in Ruby on Rails, JavaScript/TypeScript, and Python. Explore projects, blog posts, and technical insights.",
   metadataBase: new URL("https://www.agslambley.dev/"),
   icons: [
     {

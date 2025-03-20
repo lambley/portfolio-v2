@@ -16,7 +16,7 @@ export default function HomePage() {
     <main className="w-full m-auto p-4 flex flex-col items-center justify-center bg-main text-text">
       <Card className="bg-bg w-full md:w-3/4 xl:w-1/2 mb-4">
         <CardHeader className="flex items-center justify-center">
-          <CardTitle className="text-2xl">Aaron Lambley</CardTitle>
+          <CardTitle className="text-2xl"><h1>Aaron Lambley</h1></CardTitle>
           <CardDescription className="text-lg text-center">
             💻 Fullstack Developer 🌐 Web-Dev Enthusiast 📚 Bookworm 🐶 Animal
             Lover
