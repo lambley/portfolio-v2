@@ -18,7 +18,7 @@ export async function fetchProjects() {
       slug: "project-2",
       description:
         "Main bootcamp team project built over 10 days. App helps dog owners find dog-friendly activities.",
-      url: "https://pawfinder-904-fix.herokuapp.com/",
+      url: "",
       repo_url: "https://github.com/lambley/pawfinder-fix",
       image: "pawfinder",
       category: ["Ruby on Rails", "Fullstack"],
@@ -30,7 +30,7 @@ export async function fetchProjects() {
       slug: "project-3",
       description:
         "Small project made to showcase PostgresSQL search and AJAX dynamic search.",
-      url: "https://pokesearch-904.herokuapp.com/",
+      url: "",
       repo_url: "https://github.com/lambley/rails-search",
       image: "pokesearch",
       category: ["Ruby on Rails", "Fullstack"],
@@ -53,7 +53,7 @@ export async function fetchProjects() {
       slug: "project-5",
       description:
         "Restful api created with ruby on rails. Made solo during a 10 day training course.",
-      url: "https://journal-frontend-smoky.vercel.app/",
+      url: "",
       repo_url: "https://github.com/lambley/journal-api",
       image: "wisewords-api",
       category: ["Ruby on Rails", "Backend"],
@@ -65,7 +65,7 @@ export async function fetchProjects() {
       slug: "project-6",
       description:
         "Client app for WiseWords. Restful api created with ruby on rails. Made solo during a 10 day training course.",
-      url: "https://journal-frontend-smoky.vercel.app/",
+      url: "",
       repo_url: "https://github.com/lambley/journal-frontend",
       image: "wisewords-client",
       category: ["React", "Frontend"],
@@ -89,7 +89,7 @@ export async function fetchProjects() {
       slug: "project-8",
       description:
         "Chat app using tensorflow.js QnA model to answer questions based on a prompt.",
-      url: "https://tf-chat-app.vercel.app/",
+      url: "",
       repo_url: "https://github.com/lambley/tf_chat_app",
       image: "tf-chat-app",
       category: ["frontend", "react", "tensorflow.js"],
@@ -97,6 +97,18 @@ export async function fetchProjects() {
     },
     {
       id: 9,
+      title: "Grad Training - Exam App",
+      slug: "project-12",
+      description:
+        "Exam app for new starters built in fullstack Rails 8. Features Eng and French language support and top score tracking.",
+      url: "",
+      repo_url: "https://github.com/lambley/exam-grad-training-app",
+      image: "grad-training",
+      category: ["Ruby on Rails", "Fullstack"],
+      created_at: "2024-06-28",
+    },
+    {
+      id: 10,
       title: "Rails 8 Subscription Manager",
       slug: "project-10",
       description:
@@ -108,10 +120,22 @@ export async function fetchProjects() {
       created_at: "2025-01-15",
     },
     {
-      id: 10,
+      id: 11,
+      title: "Wedding RSVP App",
+      slug: "project-11",
+      description:
+        "Wedding RSVP app built for my wedding. Allows guests to RSVP and view wedding details.",
+      url: "https://www.aga-and-aaron.com/",
+      repo_url: "https://github.com/lambley/wedding-rsvp-client",
+      image: "wedding-client",
+      category: ["NextJS", "Fullstack"],
+      created_at: "2024-11-21",
+    },
+    {
+      id: 12,
       title: "Portfolio V2",
       slug: "project-9",
-      description: "My portfolio website - Version 2",
+      description: "My portfolio website - Version 2. Opted for NextJS only and Markdown for blog posts. A lot easier to maintain!",
       url: "https://www.agslambley.dev/",
       repo_url: "https://github.com/lambley/portfolio-v2",
       image: "portfolio-v2",
