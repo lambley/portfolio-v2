@@ -37,7 +37,10 @@ export default function Projects() {
       caption={project.title}
       imageUrl={`/images/projects/${project.image}.png`}
       link={project.repo_url}
+      url={project.url}
       created_at={project.created_at}
+      description={project.description}
+      categories={project.category}
       key={project.id}
     ></DynamicImageCard>
   );
@@ -65,8 +68,7 @@ export default function Projects() {
       <h1 className="text-4xl font-bold">Projects</h1>
       <p className="my-4">
         Projects I have worked on for learning purposes and for fun. Some go way
-        back to my early days of learning web development - so try not to judge
-        too harshly!
+        back to my early days of learning web development and are no longer live. Live URLs are present where available.
       </p>
       {renderProjects()}
     </main>
