@@ -69,7 +69,7 @@ export async function fetchBlogs() {
       slug: "post-5",
       image: "setup-recaptcha",
       description:
-        "A quick guide to setting up reCAPTCHA v2 in a Rails and React app",
+        "My experiences setting up reCAPTCHA v2 in a Rails and React app",
       status: BlogStatus.PUBLISHED,
       category: [
         Categories.RUBY_ON_RAILS,
@@ -83,7 +83,7 @@ export async function fetchBlogs() {
       title: "How to get started with GitHub Actions",
       slug: "post-6",
       image: "github-actions",
-      description: "A quick guide to getting started with GitHub Actions",
+      description: "Getting started with GitHub Actions",
       status: BlogStatus.PUBLISHED,
       category: [Categories.GITHUB, Categories.CI_CD],
       created_at: "2023-09-11",
@@ -105,7 +105,7 @@ export async function fetchBlogs() {
       slug: "post-8",
       image: "getting-started-with-testing",
       description:
-        "A quick guide to getting started with testing in Ruby on Rails",
+        "Foolproof guide to testing in Ruby on Rails",
       status: BlogStatus.PUBLISHED,
       category: [
         Categories.RUBY_ON_RAILS,
