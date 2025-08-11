@@ -142,6 +142,17 @@ export async function fetchProjects() {
       category: ["Nextjs", "Markdown", "Fullstack"],
       created_at: "2025-02-14",
     },
+    {
+      id: 13,
+      title: "Sales and Marketing site with TinaCMS",
+      slug: "project-13",
+      description: "Proof of concept site built using NextJS and TinaCMS for non-developer content management.",
+      url: "https://solirius-spa-poc.vercel.app/",
+      repo_url: "https://github.com/lambley/solirius-spa-poc",
+      image: "solirius-spa-poc",
+      category: ["Nextjs", "TinaCMS", "Fullstack"],
+      created_at: "2025-05-22",
+    }
   ];
 
   const projectsWithLocaleDateStringFormatting = projects.map((project) => {
