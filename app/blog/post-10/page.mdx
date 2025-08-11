@@ -1,0 +1,157 @@
+# Intro to Content Management - Using TinaCMS with NextJS
+
+## The Problem
+
+There's an age old problem when designing websites for clients - how do you hand over control to a non-technical users? After all, not everyone is capable,or willing, to edit code directly.
+
+## The Solution
+
+The solution is a Content Management System (CMS). CMS come in many forms - from large enteprise solutions like WordPress, to simpler solutions like Contentful or Sanity. You could even have a go at building your own CMS using a database and a simple admin interface.
+
+# Reference Implementation
+
+For this blog post, I will focus on using TinaCMS with NextJS. TinaCMS is a headless CMS that allows you to manage your content in a simple and intuitive way. It integrates well with NextJS and allows for inline editing, which is great for non-technical users.
+
+This is the example repository if you want to try it yourself: [github.com/lambley/solirius-spa-poc](https://github.com/lambley/solirius-spa-poc).
+
+## Choosing a CMS solution
+
+For a recent project, I decided to use TinaCMS with NextJS. I chose TinaCMS for a few, rather pragmatic, reasons:
+- It's easy to set up and use.
+- It integrates well with NextJS.
+- It allows for inline editing, which is great for non-technical users.
+- It's open source and has a free 2-user model - perfect for experimentation.
+
+## Setting up TinaCMS with NextJS
+
+TinaCMS has a handy [quick start](https://tina.io/docs/setup-overview) guide and guidance on how to manage setup on a [new project](https://tina.io/docs/introduction/using-starter) or existing project (e.g. [NextJS pages router](https://tina.io/docs/frameworks/next/pages-router)).
+
+### Installing TinaCMS
+
+First step is to install the packages, via npm or other package manager
+
+```bash
+npx @tinacms/cli@latest init
+```
+
+When prompted for the "public assets directory", you can choose the default `public` directory. This is where your static files will be stored.
+
+This will install and initialize TinaCMS in your project. It will create a `tina` folder in your project root, which contains the configuration files and the schema for your content.
+
+### Updating scripts in package.json
+
+Next, you need to update your `package.json` scripts to include the TinaCMS commands. Add the following scripts:
+
+```json
+"scripts": {
+  "dev": "tinacms dev -c \"next dev\"",
+  "build": "tinacms build && next build",
+  "start": "tinacms build && next start"
+}
+```
+
+### Configuring TinaCMS
+
+In the new `tina` folder, you will have a `config.ts` file. There are a few important things to configure in the `defineConfig` function:
+
+- `clientId`: This is your TinaCMS client ID, which you can get from the [TinaCMS dashboard](https://dashboard.tina.io/).
+- `token`: This is your TinaCMS access token, which you can also get from the dashboard. This token is used to authenticate your requests to the TinaCMS API.
+- `branch`: This is the branch you want to use for your content. You can use the default `main` branch, or create a new branch for your content.
+- `build`: You can define the output and input directories for content here.
+- `media`: This is where you can configure the media store for your images and other media files. You can use the default `local` media store, or configure a remote media store like AWS S3 or Cloudinary.
+- `schema`: This is where you define the schema for your content. You can use the default schema, or create your own schema to match your content structure.
+
+An example configuration might look like this:
+
+```typescript
+import { defineConfig } from 'tinacms';
+
+const branch = process.env.TINA_BRANCH || 'main';
+
+export default defineConfig({
+  clientId: process.env.TINA_CLIENT_ID || 'your-client-id',
+  token: process.env.TINA_TOKEN || 'your-access-token',
+  branch,
+  build: {
+    output: 'public',
+    input: 'content',
+  },
+  media: {
+    store: {
+      type: 'local',
+      mediaRoot: 'public/media',
+    },
+  },
+  schema: {
+    collections: [
+      { ... /* your collection schema here */ },
+    ],
+  },
+});
+```
+
+### More about the schema
+
+This part is probably where you will spend the most time in configuration. The schema defines the structure of your content, including fields, types, and validation rules. TinaCMS uses a JSON schema format to define collections and fields.
+
+A simple example of a collection schema might look like this:
+
+```json
+{
+  "name": "blog",
+  "label": "Blog Posts",
+  "path": "content/blog",
+  "fields": [
+    {
+      "type": "string",
+      "name": "title",
+      "label": "Title"
+    },
+    {
+      "type": "string",
+      "name": "slug",
+      "label": "Slug"
+    },
+    {
+      "type": "text",
+      "name": "content",
+      "label": "Content"
+    },
+    {
+      "type": "image",
+      "name": "image",
+      "label": "Featured Image"
+    }
+  ]
+}
+```
+
+Definining fields here exposeses them in the TinaCMS editor, allowing users to edit the content directly. You can also define validation rules, such as required fields or field types.
+
+## Storing content as JSON objects
+
+There are other ways to do this, of course, but I opted to for storing my content as JSON objects in a `content` folder. This is a simple and effective way to manage your content, especially for a blog or small website.
+
+Why? Simply to save database costs and manage content in the project repository directly. This way, it was free and version controlled. You can of course use a database like MongoDB or PostgreSQL to store your content, but that would require additional setup and configuration not discussed here.
+
+# Accessing TineCMS Admin Interface
+
+To access the TinaCMS admin interface, you can run your NextJS application in development mode:
+
+```bash
+npm run dev
+```
+
+Then, navigate to `localhost/admin`. The page will load the TinaCMS admin interface, where you can manage your content. Here's what it may look like:
+![TinaCMS example Admin Interface](/images/projects/solirius-spa-poc.png)
+
+I chose to link the TinaCMS admin directly to the project repository, so content changes can be version controlled and deployed alongside the code.
+
+# Summary
+
+I took a few shortcuts in explaining how to setup TinaCMS, simply because their guides go into A LOT more detail. I would recommend checking out their official docs if you want to learn more.
+
+A few other nice things to note:
+- TinaCMS supports inline editing, which allows you to edit content directly on the page.
+- It has a rich text editor that supports markdown, images, and other media.
+- You can easily extend the schema to include more complex content types, such as nested objects or arrays.

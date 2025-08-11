@@ -124,6 +124,16 @@ export async function fetchBlogs() {
       category: [Categories.FRONTEND, Categories.NEXTJS, Categories.FULLSTACK],
       created_at: "2025-2-21",
     },
+    {
+      id: 10,
+      title: "Intro to Content Management - Using TinaCMS with NextJS",
+      slug: "post-10",
+      description: "A quick guide to using TinaCMS with NextJS for content management",
+      image: "tina-cms-nextjs",
+      status: BlogStatus.PUBLISHED,
+      category: [Categories.NEXTJS, Categories.FULLSTACK],
+      created_at: "2025-05-22",
+    }
   ];
   return posts;
 }
