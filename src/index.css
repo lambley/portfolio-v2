@@ -110,8 +110,6 @@
   *, :after, :before, ::backdrop {
     box-sizing: border-box;
     border: 0 solid;
-    margin: 0;
-    padding: 0;
   }
 
   ::file-selector-button {
@@ -211,10 +209,6 @@
 
   summary {
     display: list-item;
-  }
-
-  ol, ul, menu {
-    list-style: none;
   }
 
   img, svg, video, canvas, audio, iframe, embed, object {
