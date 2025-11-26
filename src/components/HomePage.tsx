@@ -78,7 +78,7 @@ export default function HomePage() {
               className="flex items-center gap-1 border-2 border-black bg-pink-300 hover:bg-pink-300 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
             >
               <Briefcase className="w-3 h-3" />
-              Web-Dev Enthusiast
+              Web Dev Enthusiast
             </Badge>
             <Badge
               variant="secondary"
@@ -119,7 +119,7 @@ export default function HomePage() {
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-700 underline font-bold"
               >
-                Solirus Consulting
+                Solirus Reply
               </a>
               .
             </p>
