@@ -10,6 +10,7 @@ import HomePage from "./components/HomePage";
 import ProjectsPage from "./components/ProjectsPage";
 import BlogPage from "./components/BlogPage";
 import BlogPostPage from "./pages/BlogPost";
+import { Toaster } from "sonner";
 
 function Navigation() {
   const location = useLocation();
@@ -76,6 +77,7 @@ export default function App() {
       <div className="min-h-screen bg-blue-50">
         <Navigation />
         <main className="pt-16">
+          <Toaster position="bottom-right" richColors />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/projects" element={<ProjectsPage />} />

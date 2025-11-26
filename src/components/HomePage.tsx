@@ -5,8 +5,11 @@ import { Textarea } from "./ui/textarea";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { useState } from "react";
+import { toast } from "sonner";
 
-const FORMSPREE_ENDPOINT = `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_ID}`;
+const FORMSPREE_ENDPOINT = `https://formspree.io/f/${
+  import.meta.env.VITE_FORMSPREE_ID
+}`;
 
 export default function HomePage() {
   const [message, setMessage] = useState("");
@@ -31,15 +34,23 @@ export default function HomePage() {
       });
 
       if (response.ok) {
-        alert("Thank you for your message! It has been successfully sent.");
+        toast.success("Message Sent!", {
+          description: "Thank you for reaching out! I'll be in touch soon.",
+        });
         setMessage("");
         setEmail("");
         setIsSubmitted(true);
       } else {
-        alert("An error occurred while sending the message. Please try again.");
+        toast.error("Submission Failed", {
+          description:
+            "An error occurred while sending the message. Please check your form data.",
+        });
       }
     } catch (error) {
-      alert("Network error. Please check your connection and try again later.");
+      toast.error("Network Error", {
+        description:
+          "Could not reach the server. Please check your internet connection.",
+      });
     } finally {
       setIsSubmitting(false);
     }
