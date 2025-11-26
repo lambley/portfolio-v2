@@ -6,17 +6,43 @@ import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { useState } from "react";
 
+const FORMSPREE_ENDPOINT = `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_ID}`;
+
 export default function HomePage() {
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log({ message, email });
-    alert("Thank you for your message! This is a demo form.");
-    setMessage("");
-    setEmail("");
+    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const data = Object.fromEntries(formData);
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        alert("Thank you for your message! It has been successfully sent.");
+        setMessage("");
+        setEmail("");
+        setIsSubmitted(true);
+      } else {
+        alert("An error occurred while sending the message. Please try again.");
+      }
+    } catch (error) {
+      alert("Network error. Please check your connection and try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -126,6 +152,7 @@ export default function HomePage() {
               </label>
               <Textarea
                 id="message"
+                name="message"
                 placeholder="Your message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -144,6 +171,7 @@ export default function HomePage() {
               </label>
               <Input
                 id="email"
+                name="_replyto"
                 type="email"
                 placeholder="your.email@example.com"
                 value={email}
@@ -155,10 +183,11 @@ export default function HomePage() {
 
             <Button
               type="submit"
+              disabled={isSubmitting || isSubmitted}
               className="w-full bg-blue-400 hover:bg-blue-500 text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all gap-2"
             >
               <Mail className="w-4 h-4" />
-              Submit
+              {isSubmitting ? "Sending..." : isSubmitted ? "Sent!" : "Submit"}
             </Button>
           </form>
         </CardContent>
