@@ -53,6 +53,7 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "ts-node": "^10.9.1",
     "@types/node": "^20.10.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
@@ -61,6 +62,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build --outDir build"
+    "build": "vite build --outDir build && npm run postbuild",
+    "postbuild": "ts-node scripts/generate-sitemap.ts"
   }
 }

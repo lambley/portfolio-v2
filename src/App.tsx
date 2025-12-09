@@ -10,6 +10,7 @@ import HomePage from "./components/HomePage";
 import ProjectsPage from "./components/ProjectsPage";
 import BlogPage from "./components/BlogPage";
 import BlogPostPage from "./pages/BlogPost";
+import NotFound from "./pages/NotFound";
 import { Toaster } from "sonner";
 
 function Navigation() {
@@ -83,6 +84,7 @@ export default function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
       </div>
